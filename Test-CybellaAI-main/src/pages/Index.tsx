@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { MessageSquare, Video, Heart, ArrowRight } from 'lucide-react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
+
 const Index = () => {
   const navigate = useNavigate();
 
