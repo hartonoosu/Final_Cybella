@@ -1,60 +1,3 @@
-
-// import React from 'react';
-// import { Mic, MicOff, Send, WifiOff } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import AudioVisualizer from '../AudioVisualizer';
-
-// interface VoiceControlsProps {
-//   isListening: boolean;
-//   audioData: Uint8Array | null;
-//   sessionActive: boolean;
-//   processingInput: boolean;
-//   connectionIssue?: boolean;
-//   toggleListening: () => void;
-// }
-
-// const VoiceControls: React.FC<VoiceControlsProps> = ({
-//   isListening,
-//   audioData,
-//   sessionActive,
-//   processingInput,
-//   connectionIssue = false,
-//   toggleListening
-// }) => {
-//   return (
-//     <div className="flex items-center">
-//       <div className="flex-1">
-//         {isListening && audioData && (
-//           <AudioVisualizer isListening={isListening} audioData={audioData} />
-//         )}
-        
-//         {connectionIssue && (
-//           <div className="flex items-center text-amber-500 mb-1">
-//             <WifiOff className="inline mr-1" size={12} />
-//             <p className="text-xs">
-//               Network connection issues detected. Voice recognition quality may be affected.
-//             </p>
-//           </div>
-//         )}
-//       </div>
-      
-//       <Button 
-//         variant="default" 
-//         size="icon" 
-//         className={`w-12 h-12 rounded-full shadow-md ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'}`} 
-//         disabled={!sessionActive || processingInput || connectionIssue}
-//         onClick={toggleListening}
-//         aria-label={isListening ? "Stop listening" : "Start listening"}
-//       >
-//         {isListening ? <MicOff size={20} /> : <Mic size={20} />}
-//       </Button>
-//     </div>
-//   );
-// };
-
-// export default VoiceControls;
-
-
 import React from 'react';
 import { Mic, MicOff, WifiOff, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -130,7 +73,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
                 className="w-6 h-6 md:w-8 md:h-8 rounded-full"
                 aria-label="Voice detection information"
               >
-                <Info size={isMobile ? 12 : 16} className="text-muted-foreground" />
+                <Info size={isMobile ? 12 : 16} className="text-purple-300" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[250px] text-xs">
@@ -142,7 +85,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
         <Button 
           variant="default" 
           size="icon" 
-          className={`w-8 h-8 md:w-12 md:h-12 rounded-full shadow-md ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'}`} 
+          className={`w-8 h-8 md:w-12 md:h-12 rounded-full shadow-md ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-purple-600 hover:bg-purple-700'}`} 
           disabled={!sessionActive || processingInput || connectionIssue}
           aria-label={isListening ? "Stop listening" : "Start listening"}
           onClick={async () => {

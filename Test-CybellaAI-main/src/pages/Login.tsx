@@ -63,8 +63,8 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1E90FF] to-[#87CEEB]">
+  return ( 
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#8B5CF6] to-[#C4B5FD]">
       <Header />
       
       <main className="flex-1 container py-16 px-4 mt-16">

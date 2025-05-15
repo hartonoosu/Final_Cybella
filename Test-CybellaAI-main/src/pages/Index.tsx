@@ -5,12 +5,13 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MessageSquare, Video, Heart, ArrowRight } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1E90FF] to-[#87CEEB]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#8B5CF6] to-[#C4B5FD]">
       <Header />
       
       {/* Hero Section - Added pt-16 to account for fixed header */}
@@ -22,25 +23,32 @@ const Index = () => {
           <p className="text-xl md:text-2xl max-w-[800px] mx-auto text-white opacity-90 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             Experience emotional support through AI-powered voice therapy and facial recognition
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 items-center">
-            <Button 
-              size="lg" 
-              variant="therapeutic"
-              className="text-lg px-8 py-6 rounded-full group "
+          {/* Enhanced CTA Section */}
+          <div className="mt-12 flex flex-col sm:flex-row justify-center gap-6 items-center">
+            <div 
               onClick={() => navigate('/chat')}
-              style={{ 
-                background: "linear-gradient(135deg,rgb(96, 183, 234) 0%,rgb(96, 183, 234) 100%)",
-                boxShadow: "0 0 20px rgba(99, 220, 222, 0.44)"
-              }}
+              className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105"
             >
-              <span className="relative z-10 flex items-center">
-                <MessageSquare className="mr-2" />
-                Share Your Story
-                <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
-              </span>
-              <span className="absolute inset-0 bg-white/10 transform scale-0 group-hover:scale-100 transition-transform duration-5000 rounded-full"></span>
-            </Button>
-            
+              <div className="absolute inset-0 bg-white/30 rounded-2xl blur-xl group-hover:bg-white/40 transition-all duration-500"></div>
+              <div className="relative bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 shadow-xl shadow-purple-500/20">      
+              <DotLottieReact
+                  src="https://lottie.host/1c3dd2b6-8d4d-4482-9c52-2b7395fd3c22/onOHLO8rFw.lottie"
+                  loop
+                  autoplay
+                  style={{ width: '220px', height: '120px' }}
+                  className="mx-auto"
+                />
+                <div className="mt-4 text-white font-medium text-lg">
+                  Start Your Journey
+                </div>
+                <p className="text-white/80 text-sm mt-2">
+                  Click here to begin your therapy session
+                </p>
+              </div>
+              <div className="absolute inset-0 rounded-2xl border-2 border-white/20 pointer-events-none"></div>
+            </div>
+
+
           </div>
         </div>
       </section>
@@ -49,7 +57,7 @@ const Index = () => {
         <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:scale-105 transition-transform duration-300 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <CardContent className="p-6 space-y-4">
-              <MessageSquare className="w-12 h-12 text-white" />
+              <MessageSquare className="w-12 h-20 text-white" />
               <h3 className="text-xl font-semibold">Voice Interaction</h3>
               <p className="text-white/90">
                 Natural conversation with AI that understands and responds to your emotional state.
@@ -59,7 +67,7 @@ const Index = () => {
           
           <Card className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:scale-105 transition-transform duration-300 animate-fade-in" style={{ animationDelay: "0.5s" }}>
             <CardContent className="p-6 space-y-4">
-              <Video className="w-12 h-12 text-white" />
+              <Video className="w-12 h-20 text-white" />
               <h3 className="text-xl font-semibold">Emotion Recognition</h3>
               <p className="text-white/90">
                 Real-time facial expression analysis to better understand your emotional journey.
@@ -69,7 +77,7 @@ const Index = () => {
           
           <Card className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:scale-105 transition-transform duration-300 animate-fade-in" style={{ animationDelay: "0.7s" }}>
             <CardContent className="p-6 space-y-4">
-              <Heart className="w-12 h-12 text-white" />
+              <Heart className="w-12 h-20 text-white" />
               <h3 className="text-xl font-semibold">24/7 Support</h3>
               <p className="text-white/90">
                 Access emotional support anytime, anywhere with our AI companion.

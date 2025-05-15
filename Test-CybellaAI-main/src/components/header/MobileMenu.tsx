@@ -30,7 +30,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen, onLoginClick
             <Logo isMobile={false} />
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 h-8 w-8 p-0">
-                <X size={18} />
+                {/* <X size={18} /> */}
               </Button>
             </SheetTrigger>
           </div>

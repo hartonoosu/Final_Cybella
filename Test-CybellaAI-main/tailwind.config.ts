@@ -64,11 +64,11 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				therapeutic: {
-					calm: '#85C1E9',
-					soothing: '#7FB3D5',
-					relaxed: '#A2D9CE',
-					serene: '#D4EFDF',
-					peaceful: '#D0ECE7',
+					calm: '#9b87f5',
+					soothing: '#7E69AB',
+					relaxed: '#A591DC',
+					serene: '#E5DEFF',
+					peaceful: '#D6BCFA',
 					tranquil: '#E8DAEF',
 				}
 			},
