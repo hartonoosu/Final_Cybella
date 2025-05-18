@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ConnectivityWarning from "@/components/ConnectivityWarning";
+import { AlertProvider } from "./components/ui/animated-alert-container";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
@@ -13,6 +14,7 @@ import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile"
+import Dashboard from "./pages/Dashboard";
 
 // Create a client for React Query
 const queryClient = new QueryClient();
@@ -36,6 +38,7 @@ const App = () => (
           <TooltipProvider>
             <ToastProvider />
             <SonnerToaster />
+            <AlertProvider/>
             <ConnectivityWarning />
             <Routes>
               <Route path="/" element={<Index />} />
@@ -52,6 +55,7 @@ const App = () => (
                   <Profile />
                 </ProtectedRoute>
               } />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>

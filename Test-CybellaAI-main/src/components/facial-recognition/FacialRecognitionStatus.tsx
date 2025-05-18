@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Camera, WifiOff, RefreshCw } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { sendFaceRecognitionNotification } from '@/hooks/facial-recognition/useFaceExpressionDetection';
 
 interface FacialRecognitionStatusProps {
   permissionGranted?: boolean;
@@ -22,6 +24,23 @@ const FacialRecognitionStatus: React.FC<FacialRecognitionStatusProps> = ({
   permissionGranted = false,
   onRequestCamera
 }) => {
+   const { user } = useAuth();
+  
+  // Send notifications for status changes
+  useEffect(() => {
+    if (isActive && user) {
+      if (error) {
+        sendFaceRecognitionNotification(`Camera Error: ${error}`, user.id, 'error');
+      } else if (connectionIssue) {
+        sendFaceRecognitionNotification("Connection Issues Detected - Facial recognition may be affected", user.id, 'warning');
+      } else if (!cameraRequested && isActive) {
+        sendFaceRecognitionNotification("Please enable camera access to use facial recognition", user.id, 'info');
+      } else if (!modelsLoaded && cameraRequested) {
+        sendFaceRecognitionNotification("Loading facial recognition models...", user.id, 'info');
+      }
+    }
+  }, [error, connectionIssue, cameraRequested, modelsLoaded, isActive, user]);
+
   if (error) {
     return (
       <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-black/10 backdrop-blur-sm z-20">

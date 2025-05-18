@@ -39,10 +39,10 @@ const Index = () => {
                   style={{ width: '220px', height: '120px' }}
                   className="mx-auto"
                 />
-                <div className="mt-4 text-white font-medium text-lg">
+                <div className="mt-4 text-white font-medium text-xl">
                   Start Your Journey
                 </div>
-                <p className="text-white/80 text-sm mt-2">
+                <p className="text-white/80 text-md mt-2">
                   Click here to begin your therapy session
                 </p>
               </div>
@@ -60,7 +60,7 @@ const Index = () => {
             <CardContent className="p-6 space-y-4">
               <MessageSquare className="w-12 h-20 text-white" />
               <h3 className="text-xl font-semibold">Voice Interaction</h3>
-              <p className="text-white/90">
+              <p className="text-lg white/90">
                 Natural conversation with AI that understands and responds to your emotional state.
               </p>
             </CardContent>
@@ -70,7 +70,7 @@ const Index = () => {
             <CardContent className="p-6 space-y-4">
               <Video className="w-12 h-20 text-white" />
               <h3 className="text-xl font-semibold">Emotion Recognition</h3>
-              <p className="text-white/90">
+              <p className="text-lg white/90">
                 Real-time facial expression analysis to better understand your emotional journey.
               </p>
             </CardContent>
@@ -80,7 +80,7 @@ const Index = () => {
             <CardContent className="p-6 space-y-4">
               <Heart className="w-12 h-20 text-white" />
               <h3 className="text-xl font-semibold">24/7 Support</h3>
-              <p className="text-white/90">
+              <p className="text-lg white/90">
                 Access emotional support anytime, anywhere with our AI companion.
               </p>
             </CardContent>
@@ -93,8 +93,8 @@ const Index = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
             <Card className="bg-white/10 border-white/20 backdrop-blur-sm text-white hover:bg-white/20 transition-colors duration-300">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3">Is Cybella safe to use?</h3>
-                <p className="text-white/80">
+                <h3 className="text-xl font-semibold mb-3">Is Cybella safe to use?</h3>
+                <p className="text-lg white/80">
                   Yes, we prioritize your privacy and security. All conversations are private and encrypted.
                 </p>
               </CardContent>
@@ -102,8 +102,8 @@ const Index = () => {
             
             <Card className="bg-white/10 border-white/20 backdrop-blur-sm text-white hover:bg-white/20 transition-colors duration-300">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3">How does it work?</h3>
-                <p className="text-white/80">
+                <h3 className="text-xl font-semibold mb-3">How does it work?</h3>
+                <p className="text-lg white/80">
                   Cybella uses advanced AI to understand your emotions and provide meaningful support.
                 </p>
               </CardContent>
@@ -111,8 +111,8 @@ const Index = () => {
             
             <Card className="bg-white/10 border-white/20 backdrop-blur-sm text-white hover:bg-white/20 transition-colors duration-300">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3">What can Cybella help with?</h3>
-                <p className="text-white/80">
+                <h3 className="text-xl font-semibold mb-3">What can Cybella help with?</h3>
+                <p className="text-lg white/80">
                   From daily conversations to emotional support, Cybella is your AI companion.
                 </p>
               </CardContent>

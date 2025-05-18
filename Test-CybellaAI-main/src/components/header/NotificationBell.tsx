@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { toast } from "sonner";
 import { useAuth } from '@/contexts/AuthContext';
+import { showAlert } from '../ui/animated-alert-container';
 
 // Notification type definition
 export interface Notification {
@@ -39,6 +40,7 @@ export const notificationStore = {
     this.notifications = this.notifications.slice(0, 50); // Keep more total but filter by user when displaying
     
     this.notifyListeners();
+    showAlert(notification.message, notification.type, 8000)
     return newNotification;
   },
   
@@ -89,15 +91,15 @@ const NotificationBell = () => {
     });
     
     // Add welcome notification if user is logged in
-    if (user) {
-      const welcomeNotification = {
-        message: `Welcome back, ${user.name || user.email}!`,
-        type: 'info' as const,
-        read: false,
-        userId: user.id // Associate notification with user
-      };
-      notificationStore.addNotification(welcomeNotification);
-    }
+    // if (user) {
+    //   const welcomeNotification = {
+    //     message: `Welcome back, ${user.name || user.email}!`,
+    //     type: 'info' as const,
+    //     read: false,
+    //     userId: user.id // Associate notification with user
+    //   };
+    //   notificationStore.addNotification(welcomeNotification);
+    // }
     
     return unsubscribe;
   }, [user]);

@@ -178,13 +178,19 @@ export function useVoiceProcessing({
   onVoiceEmotionDetected,
 }: {
   sessionActive: boolean;
-  onVoiceEmotionDetected?: (emotion: Emotion, confidence: number,  top3?: {emotion: Emotion; confidence: number}[]) => void;
+  onVoiceEmotionDetected?: (
+    emotion: Emotion,
+    confidence: number,
+    top3?: { emotion: Emotion; confidence: number }[]
+  ) => void;
 }) {
   const [transcription, setTranscription] = useState<string>("");
   const [detectedEmotion, setDetectedEmotion] = useState<Emotion | null>(null);
   const [emotionConfidence, setEmotionConfidence] = useState<number>(0);
   const [isPredictingEmotion, setIsPredictingEmotion] = useState(false);
-  const [topEmotions, setTopEmotions] = useState<{ emotion: Emotion; confidence: number }[]>([]);
+  const [topEmotions, setTopEmotions] = useState<
+    { emotion: Emotion; confidence: number }[]
+  >([]);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
 
   const [chatHistory, setChatHistory] = useState<
@@ -200,85 +206,99 @@ export function useVoiceProcessing({
     setShouldPlayVoice,
   } = useAIResponse();
 
-  const detectVoiceEmotion = useCallback(async (blob: Blob) => {
-    if (!sessionActive || !onVoiceEmotionDetected || isPredictingEmotion) {
-      console.log("Emotion prediction already running — skipping");
-      return;
-    }
-  
-    // Check if blob is too small — likely user didn’t speak enough
-    if (blob.size < 10000) {
-      const fallbackEmotion = "too short" as Emotion;
-      console.warn("Recording too short — skipping prediction");
-  
-      // Show "too short" in EmotionDisplay + force fallback AI reply
-      onVoiceEmotionDetected(fallbackEmotion, 0);
-      setDetectedEmotion(fallbackEmotion);
-      setEmotionConfidence(0);
-      await generateAIResponse(fallbackEmotion);
-      return;
-    }
+  /**
+   * Manually Set Voice Emotion
+   */
+  const setVoiceEmotion = (emotion: Emotion, confidence: number) => {
+    setDetectedEmotion(emotion);
+    setEmotionConfidence(confidence);
 
-    setIsPredictingEmotion(true); // start loading state
-    console.log("Emotion prediction started");
-  
-    try {
-      // Send audio to backend for emotion prediction
-      type EmotionAPIResult = {
-      emotion: string;
-      confidence: number;
-      top3?: { emotion: Emotion; confidence: number }[];
-    };
+    console.log(`Manually Set Emotion: ${emotion} with confidence: ${confidence}`);
 
-      const result = await getRealVoiceEmotion(blob) as EmotionAPIResult;
-      console.log("Emotion result:", result);
-      if (result.top3) {
-        setTopEmotions(result.top3);
-      } else {
-        setTopEmotions([]);
+    if (onVoiceEmotionDetected) {
+      onVoiceEmotionDetected(emotion, confidence);
+    }
+  };
+
+  /**
+   * Detect Emotion from Voice
+   */
+  const detectVoiceEmotion = useCallback(
+    async (blob: Blob) => {
+      if (!sessionActive || !onVoiceEmotionDetected || isPredictingEmotion) {
+        console.log("Emotion prediction already running — skipping");
+        return;
       }
-  
-      // If backend says audio is invalid (too short, too soft, too noisy)
-      if (
-        result.emotion === "too_short" ||
-        result.emotion === "too_soft" ||
-        result.emotion === "too_noisy"
-      ) {
-        const fallbackEmotion = result.emotion.replace("_", " ") as Emotion;
-        setTopEmotions([]); // clear leftover top3
 
-        // Show fallback result + zero confidence
+      if (blob.size < 10000) {
+        const fallbackEmotion = "too short" as Emotion;
+        console.warn("Recording too short — skipping prediction");
+
         onVoiceEmotionDetected(fallbackEmotion, 0);
         setDetectedEmotion(fallbackEmotion);
         setEmotionConfidence(0);
         await generateAIResponse(fallbackEmotion);
         return;
       }
-  
-      // Normal emotion prediction success
-      onVoiceEmotionDetected(result.emotion as Emotion, result.confidence, result.top3);
-      setDetectedEmotion(result.emotion as Emotion);
-      setEmotionConfidence(result.confidence);
-  
-    } catch (err) {
-      console.error("Emotion prediction failed:", err);
-    } finally {
-      setIsPredictingEmotion(false);
-      console.log("Emotion prediction finished at:", new Date().toLocaleTimeString());
-    }
-  }, [sessionActive, isPredictingEmotion, onVoiceEmotionDetected]);  
 
+      setIsPredictingEmotion(true);
 
+      try {
+        type EmotionAPIResult = {
+          emotion: string;
+          confidence: number;
+          top3?: { emotion: Emotion; confidence: number }[];
+        };
+
+        const result = (await getRealVoiceEmotion(blob)) as EmotionAPIResult;
+
+        if (result.top3) {
+          setTopEmotions(result.top3);
+        } else {
+          setTopEmotions([]);
+        }
+
+        if (
+          result.emotion === "too_short" ||
+          result.emotion === "too_soft" ||
+          result.emotion === "too_noisy"
+        ) {
+          const fallbackEmotion = result.emotion.replace("_", " ") as Emotion;
+          setTopEmotions([]);
+
+          onVoiceEmotionDetected(fallbackEmotion, 0);
+          setDetectedEmotion(fallbackEmotion);
+          setEmotionConfidence(0);
+          await generateAIResponse(fallbackEmotion);
+          return;
+        }
+
+        onVoiceEmotionDetected(result.emotion as Emotion, result.confidence, result.top3);
+        setDetectedEmotion(result.emotion as Emotion);
+        setEmotionConfidence(result.confidence);
+
+      } catch (err) {
+        console.error("Emotion prediction failed:", err);
+      } finally {
+        setIsPredictingEmotion(false);
+      }
+    },
+    [sessionActive, isPredictingEmotion, onVoiceEmotionDetected, generateAIResponse]
+  );
+
+  /**
+   * Process User Input
+   */
   const processUserInput = async (input: string) => {
     if (!input.trim()) return;
     setTranscription(input);
     setChatHistory((prev) => [...prev, { role: "user", text: input }]);
-  
+
     const response = await generateAIResponse(input);
     if (response) {
       setChatHistory((prev) => [...prev, { role: "ai", text: response }]);
     }
-  
+
     setTranscription("");
   };
 
@@ -314,6 +334,8 @@ export function useVoiceProcessing({
     topEmotions,
     setTranscription,
     setInterimTranscript: speechRecognition.setInterimTranscript,
+    
+    // ✅ Newly added function
+    setVoiceEmotion,
   };
 }
-

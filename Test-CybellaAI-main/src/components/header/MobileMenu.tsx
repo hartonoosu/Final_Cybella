@@ -24,7 +24,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen, onLoginClick
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="right" className="w-[280px] p-4 bg-[#1E90FF]/95 text-white backdrop-blur-lg border-l border-white/10">
+      <SheetContent side="right" className="w-[280px] p-4 bg-gradient-to-b from-[#8B5CF6] to-[#C4B5FD] text-white backdrop-blur-lg border-l border-white/20">
         <div className="flex flex-col gap-6 pt-2">
           <div className="flex items-center justify-between">
             <Logo isMobile={false} />

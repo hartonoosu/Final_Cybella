@@ -6,6 +6,8 @@ import { loadFaceDetectionModels, getLoadedModelsStatus } from '@/utils/recognit
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Emotion } from '@/components/EmotionDisplay';
+import { sendFaceRecognitionNotification } from '@/hooks/facial-recognition/useFaceExpressionDetection';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface FacialRecognitionProps {
   onEmotionDetected?: (emotion: Emotion, confidence: number) => void;
@@ -30,6 +32,7 @@ const FacialRecognitionInner: React.FC<FacialRecognitionProps> = ({
   const modelsLoadingRef = useRef(false);
   const isMobile = useIsMobile();
   const sessionIdRef = useRef<string>("");
+  const { user } = useAuth();
 
   // Generate new session ID when session state changes
   useEffect(() => {
@@ -47,21 +50,24 @@ const FacialRecognitionInner: React.FC<FacialRecognitionProps> = ({
     loadFaceDetectionModels()
       .then(() => {
         if (!toastShownRef.current) {
-          toast({
-            title: "Facial Recognition Ready",
-            description: isMobile ?
-              "Emotion detection optimized for mobile device." :
-              "Emotion detection is ready."
-          });
+          // Use notification bell instead of toast
+          sendFaceRecognitionNotification(
+            isMobile 
+              ? "Facial Recognition Ready - Emotion detection optimized for mobile device." 
+              : "Facial Recognition Ready - Emotion detection is ready.",
+            user?.id,
+            "success"
+          );
           toastShownRef.current = true;
         }
       })
       .catch(() => {
-        toast({
-          title: "Detection Models Issue",
-          description: "There was a problem loading emotion detection models. Please refresh the page.",
-          variant: "destructive"
-        });
+        // Show error as notification
+        sendFaceRecognitionNotification(
+          "Detection Models Issue - There was a problem loading emotion detection models. Please refresh the page.",
+          user?.id,
+          "error"
+        );
       });
   }, [toast, isMobile]);
 
@@ -157,7 +163,28 @@ const FacialRecognitionInner: React.FC<FacialRecognitionProps> = ({
     }
     lastActiveStateRef.current = isActive;
   }, [isActive, setEmotionData]);
+  
+// Notify about connection issues
+  useEffect(() => {
+    if (hasConnectionIssue && isActive && user) {
+      sendFaceRecognitionNotification(
+        "Connection Issues Detected - Facial recognition models may struggle with your current connection.",
+        user.id,
+        "warning"
+      );
+    }
+  }, [hasConnectionIssue, isActive, user]);
 
+  // Notify about camera errors
+  useEffect(() => {
+    if (error && isActive && user) {
+      sendFaceRecognitionNotification(
+        `Camera Access Error - ${error}`,
+        user.id,
+        "error"
+      );
+    }
+  }, [error, isActive, user]);
   return (
     <FacialRecognitionCard
       videoRef={videoRef}

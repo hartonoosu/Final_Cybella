@@ -3,6 +3,8 @@ import * as faceapi from 'face-api.js';
 import { mouthAnalysis } from './mouthAnalysis';
 import { eyebrowAnalysis } from './eyebrowAnalysis';
 import { eyeAnalysis } from './eyeAnalysis';
+import { addNotification } from '@/components/header/NotificationBell';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
  * Analyzes facial landmarks to enhance emotion detection
@@ -99,4 +101,15 @@ export function analyzeFacialLandmarks(
     default:
       return 1.3; // Moderate general boost for all emotions
   }
+}
+/**
+ * Helper function to send facial analysis notifications
+ */
+export function sendFacialAnalysisNotification(message: string, userId?: string, type: 'info' | 'success' | 'warning' | 'error' = 'info') {
+  addNotification({
+    message,
+    read: false,
+    type,
+    userId
+  });
 }

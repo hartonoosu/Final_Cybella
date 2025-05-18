@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
 import NavItems from './header/NavItems';
-import ThemeToggle from './header/ThemeToggle';
 import UserDropdown from './header/UserDropdown';
 import MobileMenu from './header/MobileMenu';
 import NotificationBell from './header/NotificationBell';
@@ -15,17 +14,10 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
-
+  const location = useLocation();
   const handleLoginClick = () => {
     if (onLoginClick) onLoginClick();
     navigate('/login');
@@ -45,7 +37,7 @@ const headerBgClass = "fixed top-0 left-0 right-0 z-50 px-2 md:px-4 py-3 md:py-4
         </div>
 
         {/* Center Section - Navigation */}
-        <div className="flex-grow flex justify-center mx-4">
+        <div className="flex-grow flex justify-center mx-4 pl-20">
           {!isMobile && <NavItems className="shadow-sm" />}
         </div>
 
@@ -69,7 +61,7 @@ const headerBgClass = "fixed top-0 left-0 right-0 z-50 px-2 md:px-4 py-3 md:py-4
             </>
           ) : (
             <>
-              <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+
               <NotificationBell />
               <UserDropdown />
             </>

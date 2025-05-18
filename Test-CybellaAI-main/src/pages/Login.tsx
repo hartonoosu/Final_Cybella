@@ -67,7 +67,7 @@ const Login = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#8B5CF6] to-[#C4B5FD]">
       <Header />
       
-      <main className="flex-1 container py-16 px-4 mt-16">
+      <main className="text-lg flex-1 container py-16 px-4 mt-16">
         <FormContainer 
           title="Welcome Back" 
           subtitle="Sign in to continue to Cybella"
@@ -135,15 +135,6 @@ const Login = () => {
                     <UserPlus className="mr-2 h-4 w-4" />
                     Sign up now
                   </Link>
-                </p>
-              </div>
-              
-              {/* Test account info */}
-              <div className="mt-8 p-3 bg-white/10 rounded-lg border border-white/20">
-                <p className="text-white text-sm text-center">
-                  <span className="font-semibold block mb-2">Test Account:</span>
-                  Email: test@example.com<br />
-                  Password: password123
                 </p>
               </div>
             </form>

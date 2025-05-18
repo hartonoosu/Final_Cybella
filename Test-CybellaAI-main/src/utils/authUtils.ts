@@ -73,5 +73,10 @@ export const handleEmailVerificationSuccess = (userId: string, isSimulation: boo
 
 export const handleAuthError = (error: any, message: string): void => {
   toast.error(message);
+  notificationStore.addNotification({
+    message,
+    type:'error',
+    read: false
+  });
   console.error(message, error);
 };

@@ -1,6 +1,8 @@
 import * as faceapi from 'face-api.js';
 import { Emotion } from '@/components/EmotionDisplay';
 import { processEmotions } from '@/utils/recognition/emotionProcessing';
+import { addNotification } from '@/components/header/NotificationBell';
+
 
 /**
  * Highly optimized face expression detection for better performance
@@ -73,4 +75,15 @@ export async function detectFaceExpressions(
     console.error('Error in face detection:', error);
     return null;
   }
+}
+/**
+ * Helper function to add face recognition notifications
+ */
+export function sendFaceRecognitionNotification(message: string, userId?: string, type: 'info' | 'success' | 'warning' | 'error' = 'info') {
+  addNotification({
+    message,
+    read: false,
+    type,
+    userId
+  });
 }

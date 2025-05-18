@@ -24,7 +24,6 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({ control }) => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-white">Security</h3>
       
       <FormFieldWithFeedback
         control={control}
@@ -53,7 +52,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({ control }) => {
         )}
       />
       
-      <ul className="text-xs text-white/80 mt-2 space-y-1 list-disc pl-5">
+      <ul className="text-sm text-black/80 mt-2 space-y-1 list-disc pl-5">
         <li className={control._formValues.password?.length >= 6 ? "text-green-400" : ""}>
           At least 6 characters
         </li>
