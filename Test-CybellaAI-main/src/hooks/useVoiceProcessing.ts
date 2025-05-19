@@ -7,6 +7,9 @@ import { recordVoice } from "../utils/voiceRecorder";
 import { getRealVoiceEmotion } from "@/utils/emotionAPI";
 import { useSpeechRecognition } from "@/hooks/voice/useSpeechRecognition";
 
+// Import the global context that stores segment-wise emotion predictions
+import { useVoiceEmotionContext } from "@/contexts/VoiceEmotionContext";
+
 // Audio visualization hook
 export function useAudioVisualization(isListening: boolean) {
   const [audioData, setAudioData] = useState<Uint8Array | null>(null);
@@ -128,6 +131,9 @@ export function useVoiceSession({
 }) {
   const [sessionActive, setSessionActive] = useState<boolean>(false);
 
+  // Destructure the context function to set segment data globally
+  const { setSegmentEmotions } = useVoiceEmotionContext();
+
   const startSession = () => {
     setSessionActive(true);
 
@@ -197,6 +203,8 @@ export function useVoiceProcessing({
     { role: "user" | "ai"; text: string }[]
   >([]);
 
+  const { setSegmentEmotions } = useVoiceEmotionContext();
+
   const {
     aiResponse,
     shouldPlayVoice,
@@ -248,10 +256,17 @@ export function useVoiceProcessing({
           top3?: { emotion: Emotion; confidence: number }[];
         };
 
-        const result = (await getRealVoiceEmotion(blob)) as EmotionAPIResult;
+        const result = await getRealVoiceEmotion(blob) as EmotionAPIResult & { segments?: any[] };
 
+        // Store segment-wise emotion results in global context so all pages can access
+        if (result.segments) {
+          setSegmentEmotions(result.segments);
+          console.log(" Segment Emotions stored in context:", result.segments);
+        }
+
+        // Console log each segment to verify
         if ("segments" in result && Array.isArray(result.segments)) {
-        console.log("🎯 Voice Emotion Segments (every 3s):");
+        console.log("Voice Emotion Segments (every 3s):");
         result.segments.forEach((seg, i) => {
           console.log(
             `Segment ${i + 1}: ${seg.start}s – ${seg.end}s → ${seg.emotion} (${seg.confidence})`
@@ -341,8 +356,6 @@ export function useVoiceProcessing({
     topEmotions,
     setTranscription,
     setInterimTranscript: speechRecognition.setInterimTranscript,
-    
-    // ✅ Newly added function
     setVoiceEmotion,
   };
 }

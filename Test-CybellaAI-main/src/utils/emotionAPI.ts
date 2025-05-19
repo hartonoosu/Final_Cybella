@@ -1,6 +1,11 @@
 export async function getRealVoiceEmotion(
   audioBlob: Blob
-): Promise<{ emotion: string; confidence: number, top3?: { emotion: string; confidence: number }[] }> {
+): Promise<{ emotion: string; confidence: number, top3?: { emotion: string; confidence: number }[]; segments?: {
+    start: number;
+    end: number;
+    emotion: string;
+    confidence: number;
+  }[]; }> {
   const formData = new FormData();
   formData.append("file", audioBlob, "voice.wav");
 
@@ -40,6 +45,7 @@ export async function getRealVoiceEmotion(
       emotion: data.emotion,
       confidence: Number(data.confidence),
       top3: data.top3,
+      segments: data.segments //return segment data
     };
   } catch (error) {
     console.error("Error:", error);

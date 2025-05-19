@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card } from '@/components/ui/card';
@@ -9,6 +9,9 @@ import SessionHistoryList from '@/components/dashboard/SessionHistoryList';
 import EmotionSummary from '@/components/dashboard/EmotionSummary';
 import EmotionDistribution from '@/components/dashboard/EmotionDistribution';
 import EmotionBySource from '@/components/dashboard/EmotionBySource';
+
+//import voice emotion context
+import { useVoiceEmotionContext } from "@/contexts/VoiceEmotionContext";
 import { AlertCircle, Trash2, AlertTriangle } from 'lucide-react';
 import {
   AlertDialog,
@@ -23,8 +26,13 @@ import {
 
 const Dashboard = () => {
   const { emotionData, clearData } = useEmotionData();
+  const { segmentEmotions } = useVoiceEmotionContext(); // Access the globally stored segment data
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
-  
+
+  useEffect(() => {
+  console.log("Dashboard loaded segmentEmotions:", segmentEmotions);
+}, [segmentEmotions]); 
+
   const hasSessions = emotionData.sessions.length > 0;
 
   return (
