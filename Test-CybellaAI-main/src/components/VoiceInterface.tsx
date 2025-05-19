@@ -724,13 +724,26 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
 
       <div className="overflow-y-auto h-[300px] pr-1 md:pr-2">
         <div className="space-y-3 md:space-y-4">
-          {voice.chatHistory.map((msg, i) =>
-            msg.role === "user" ? (
+          {voice.chatHistory.map((msg, i) => {
+            const isLastAI =
+              msg.role === "ai" &&
+              i === voice.chatHistory
+                .map((m, idx) => (m.role === "ai" ? idx : -1))
+                .filter((idx) => idx !== -1)
+                .pop();
+
+            return msg.role === "user" ? (
               <UserMessage key={i} text={msg.text} />
             ) : (
-              <AIMessage key={i} text={msg.text} autoplay={false} />
-            )
-          )}
+              <AIMessage
+                key={i}
+                text={msg.text}
+                autoplay={isLastAI} // only autoplay the last AI message
+                showControls={isLastAI} // only show play/stop buttons for the last one
+              />
+            );
+          })}
+
           <UserTranscription
             transcription={voice.transcription}
             interimTranscript={voice.interimTranscript}
