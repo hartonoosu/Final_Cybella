@@ -307,6 +307,8 @@ export function useVoiceProcessing({
     onTranscriptionComplete: processUserInput,
   }) as ReturnType<typeof useSpeechRecognition>;
 
+  const forceStopRef = speechRecognition.forceStopRef;
+
   const audioData = useAudioVisualization(speechRecognition.isListening);
 
   return {
@@ -337,5 +339,6 @@ export function useVoiceProcessing({
     
     // ✅ Newly added function
     setVoiceEmotion,
+    forceStopRef
   };
 }

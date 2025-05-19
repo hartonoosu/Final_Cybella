@@ -20,6 +20,8 @@ export function useSpeechRecognition({
     (typeof window.SpeechRecognition !== 'undefined' || typeof window.webkitSpeechRecognition !== 'undefined');
 
      const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+     const forceStopRef = useRef(false);
+
   
   useEffect(() => {
     if (!speechRecognitionSupported) {
@@ -49,9 +51,10 @@ export function useSpeechRecognition({
             onTranscriptionComplete(transcript);
           }
 
-          if (isListening) {
+          if (forceStopRef.current) {
             stopListening();
           }
+
         }, 2000); // wait 2 seconds of silence
       } else {
         setInterimTranscript(transcript);
@@ -75,6 +78,7 @@ export function useSpeechRecognition({
     if (!sessionActive || !speechRecognitionSupported) return;
     
     try {
+      forceStopRef.current = false;
       await speechRecognition.start();
       setIsListening(true);
     } catch (error) {
@@ -102,5 +106,6 @@ export function useSpeechRecognition({
     stopListening,
     setTranscription,
     setInterimTranscript,
+    forceStopRef,
   };
 }

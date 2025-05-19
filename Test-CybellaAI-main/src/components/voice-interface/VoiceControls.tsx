@@ -37,7 +37,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
   const isMobile = useIsMobile();
 
   const {
-    detectVoiceEmotion, generateAIResponse
+    detectVoiceEmotion, generateAIResponse, forceStopRef
   } = useVoiceProcessing({
     sessionActive,
     onVoiceEmotionDetected: (emotion, confidence, top3) => {
@@ -93,6 +93,8 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
           
             if (!isListening) {
               const {blob, duration} = await recordVoice();
+              forceStopRef.current = true;
+
           
               // Download voice blob (optional)
               // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
