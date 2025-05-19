@@ -30,8 +30,8 @@ const Dashboard = () => {
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
   useEffect(() => {
-  console.log("Dashboard loaded segmentEmotions:", segmentEmotions);
-}, [segmentEmotions]); 
+    console.log("Dashboard loaded segmentEmotions:", segmentEmotions);
+  }, [segmentEmotions]); 
 
   const hasSessions = emotionData.sessions.length > 0;
 
