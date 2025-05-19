@@ -207,13 +207,11 @@ export function useVoiceProcessing({
   } = useAIResponse();
 
   /**
-   * Manually Set Voice Emotion
+   * Set Voice Emotion
    */
   const setVoiceEmotion = (emotion: Emotion, confidence: number) => {
     setDetectedEmotion(emotion);
     setEmotionConfidence(confidence);
-
-    console.log(`Manually Set Emotion: ${emotion} with confidence: ${confidence}`);
 
     if (onVoiceEmotionDetected) {
       onVoiceEmotionDetected(emotion, confidence);
@@ -251,6 +249,15 @@ export function useVoiceProcessing({
         };
 
         const result = (await getRealVoiceEmotion(blob)) as EmotionAPIResult;
+
+        if ("segments" in result && Array.isArray(result.segments)) {
+        console.log("🎯 Voice Emotion Segments (every 3s):");
+        result.segments.forEach((seg, i) => {
+          console.log(
+            `Segment ${i + 1}: ${seg.start}s – ${seg.end}s → ${seg.emotion} (${seg.confidence})`
+          );
+        });
+      }
 
         if (result.top3) {
           setTopEmotions(result.top3);

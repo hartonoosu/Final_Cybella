@@ -41,7 +41,6 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
   } = useVoiceProcessing({
     sessionActive,
     onVoiceEmotionDetected: (emotion, confidence, top3) => {
-      console.log("Emotion detected:", emotion, confidence, top3);
       setVoiceEmotion(emotion, confidence, top3);
     }
   });

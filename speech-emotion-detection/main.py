@@ -255,12 +255,11 @@ async def predict(file: UploadFile = File(...)):
         collection.insert_one(prediction_data)
 
         # Response
-        response = {
-            "emotion": result["emotion"],
-            "confidence": confidence,
+        return {
+            **result,
             "message": "Emotion detected successfully"
         }
-        return response
+
 
     except Exception as e:
         print(f"Prediction error: {e}")

@@ -128,6 +128,32 @@ def predict_emotion_from_audio(path):
 
     print("Final Top 3 Emotions:", [(label, round(prob, 3)) for prob, label in top3])
 
+
+    # Segment-wise results to include in response (each 3s window)
+    segment_results = []
+    for i, probs in enumerate(predictions):
+        pred_idx = int(np.argmax(probs))
+        pred_label = label_encoder.inverse_transform([pred_idx])[0]
+        conf = float(round(probs[pred_idx], 4))
+
+        if pred_label.lower() == "fear":
+            pred_label = "fearful"
+
+        start_sec = round(i * WINDOW_DURATION, 1)
+        end_sec = round(start_sec + WINDOW_DURATION, 1)
+
+        segment_results.append({
+            "start": start_sec,
+            "end": end_sec,
+            "emotion": pred_label.lower(),
+            "confidence": conf
+        })
+
+    print("\n Segment results to be returned to frontend:")
+    for seg in segment_results:
+        print(f"  - {seg['start']}s to {seg['end']}s → {seg['emotion']} ({seg['confidence']})")
+
+
     return {
     "emotion": predicted_label.lower(),
     "confidence": float(round((avg_probs if USE_AVERAGE else best_probs)[predicted_index], 4)),
@@ -137,6 +163,7 @@ def predict_emotion_from_audio(path):
             "confidence": float(round(prob, 4))
         }
         for prob, label in top3
-    ]
+    ],
+    "segments": segment_results 
 }
 

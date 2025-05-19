@@ -11,12 +11,9 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
   const startTrigger = Date.now();
   console.log("User triggered recording at:", new Date(startTrigger).toLocaleTimeString());
 
-  console.log("Cancelling any AI speech...");
   window.speechSynthesis.cancel();
 
-  console.log("Requesting mic access...");
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  console.log("Mic access granted.");
 
   const chunks: Blob[] = [];
   const mediaRecorder = new MediaRecorder(stream);
@@ -77,7 +74,6 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
         silenceStartTime = Date.now();
         console.log("Silence started at:", new Date().toLocaleTimeString());
       } else if (Date.now() - silenceStartTime > 2000) {
-        console.log("Detected 2 seconds of silence — stopping...");
         stopRecording();
       }
     } else {
@@ -90,14 +86,12 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
   return new Promise((resolve) => {
     mediaRecorder.ondataavailable = (e) => {
       if (e.data.size > 0) {
-        console.log("Chunk received:", e.data.size, "bytes");
         chunks.push(e.data);
       }
     };
 
     mediaRecorder.onstop = () => {
       stream.getTracks().forEach((track) => track.stop());
-      console.log("Mic stream closed.");
 
       const stopTime = new Date();
       const duration = stopTime.getTime() - startTime;
@@ -125,7 +119,6 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
       resolve({blob, duration});
     };
 
-    console.log("Warming up mic — please wait 0.3 second before speaking...");
     setTimeout(() => {
       mediaRecorder.start();
       startTime = Date.now();

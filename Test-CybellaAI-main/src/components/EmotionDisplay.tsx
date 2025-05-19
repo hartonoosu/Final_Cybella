@@ -63,8 +63,6 @@ const EmotionDisplay: React.FC<EmotionDisplayProps> = ({
   topEmotions
 }) => {  
   const isMobile = useIsMobile();
-  console.log("Top emotions", topEmotions);
-
 
   return (
     <Card className="p-2 md:p-4 shadow-sm bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm">
