@@ -264,15 +264,19 @@ export function useVoiceProcessing({
           const segmentsWithTime = result.segments.map((seg) => {
             const segmentStartTime = new Date(recordingStartedAt.getTime() + seg.start * 1000);
             const segmentEndTime = new Date(recordingStartedAt.getTime() + seg.end * 1000);
+
             return {
-              ...seg,
+              start: seg.start,
+              end: seg.end,
               startTime: segmentStartTime.toISOString(),
               endTime: segmentEndTime.toISOString(),
+              emotion: seg.emotion,
+              confidence: seg.confidence,
             };
           });
 
           setSegmentEmotions(segmentsWithTime);
-          console.log( "Segment Emotions stored with time:", segmentsWithTime);
+          console.log("Segment Emotions stored with time:", segmentsWithTime);
         }
 
         // Console log each segment to verify
