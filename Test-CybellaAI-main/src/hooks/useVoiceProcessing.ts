@@ -256,12 +256,23 @@ export function useVoiceProcessing({
           top3?: { emotion: Emotion; confidence: number }[];
         };
 
+        const recordingStartedAt = new Date(); // get real-world recording time
         const result = await getRealVoiceEmotion(blob) as EmotionAPIResult & { segments?: any[] };
 
         // Store segment-wise emotion results in global context so all pages can access
         if (result.segments) {
-          setSegmentEmotions(result.segments);
-          console.log(" Segment Emotions stored in context:", result.segments);
+          const segmentsWithTime = result.segments.map((seg) => {
+            const segmentStartTime = new Date(recordingStartedAt.getTime() + seg.start * 1000);
+            const segmentEndTime = new Date(recordingStartedAt.getTime() + seg.end * 1000);
+            return {
+              ...seg,
+              startTime: segmentStartTime.toISOString(),
+              endTime: segmentEndTime.toISOString(),
+            };
+          });
+
+          setSegmentEmotions(segmentsWithTime);
+          console.log( "Segment Emotions stored with time:", segmentsWithTime);
         }
 
         // Console log each segment to verify
