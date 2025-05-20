@@ -43,6 +43,9 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
     if (!hasStopped && mediaRecorder.state === "recording") {
       console.log("Calling mediaRecorder.stop() at:", new Date().toLocaleTimeString());
       mediaRecorder.stop();
+      clearInterval(volumeInterval);
+      source.disconnect();
+      analyser.disconnect();
       hasStopped = true;
     }
   };
@@ -68,9 +71,9 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
       calibrationFrames++;
       return;
     }
-
     const averageBaseline = baselineVolume / calibrationLimit;
-    const dynamicThreshold = averageBaseline + 5;
+    const dynamicThreshold = Math.min(Math.max(averageBaseline * 2.5, 1.5), 8);
+    console.log(`[Volume Check] Volume: ${currentVolume.toFixed(2)} | Threshold: ${dynamicThreshold.toFixed(2)}`);
 
     if (currentVolume < dynamicThreshold) {
       if (silenceStartTime === null) {
@@ -128,6 +131,14 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
     console.log("Warming up mic — please wait 0.3 second before speaking...");
     setTimeout(() => {
       mediaRecorder.start();
+      const aiSpeakingCheck = setInterval(() => {
+        if (window.speechSynthesis.speaking) {
+          console.log("Detected AI speaking – stopping recording...");
+          stopRecording();
+          clearInterval(aiSpeakingCheck);
+        }
+      }, 200);
+
       startTime = Date.now();
       console.log("Recording actually started at:", new Date(startTime).toLocaleTimeString(), "| Delay from trigger:", startTime - startTrigger, "ms");
 

@@ -21,7 +21,7 @@ STEP_SIZE = SAMPLE_RATE * 1  # 1-second step (overlap)
 MAX_ANALYSIS_DURATION = 9 * SAMPLE_RATE  # only use first 9 seconds
 
 # Thresholds for quality checks
-VOLUME_THRESHOLD = 0.002 # the higher the less sensitive
+VOLUME_THRESHOLD = 0.0025 # the higher the less sensitive
 PEAK_THRESHOLD = 0.02
 ENERGY_STD_THRESHOLD = 0.005  # detect constant loud noise
 

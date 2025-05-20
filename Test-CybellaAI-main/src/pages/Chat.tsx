@@ -197,12 +197,12 @@ const Chat = () => {
               {!isMobile && null /* Empty spacer for desktop layout */}
             </div>
             <div className={`space-y-2 md:space-y-6 ${isMobile ? 'order-first' : ''}`}>
-              <FacialRecognition
+              {/* <FacialRecognition
                 onEmotionDetected={handleFaceEmotionDetected}
                 isActive={sessionActive}
                 connectionIssue={!isOnline || connectionQuality === 'poor'}
                 key={`face-${sessionCount}`}
-              />
+              /> */}
               
               {/* Compact emotion info box for mobile */}
               {isMobile && sessionActive && (

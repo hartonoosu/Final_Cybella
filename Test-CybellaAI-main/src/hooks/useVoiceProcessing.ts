@@ -336,8 +336,6 @@ export function useVoiceProcessing({
     topEmotions,
     setTranscription,
     setInterimTranscript: speechRecognition.setInterimTranscript,
-    
-    // ✅ Newly added function
     setVoiceEmotion,
     forceStopRef
   };

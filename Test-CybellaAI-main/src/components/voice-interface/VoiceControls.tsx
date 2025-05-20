@@ -93,6 +93,33 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
           
             if (!isListening) {
               const {blob, duration} = await recordVoice();
+              // Check for too short before calling backend
+              // if (blob.size < 70000) {
+              //   console.warn("Frontend check: Voice input too short — skipping backend prediction");
+              //   stopListening(); 
+              //   await generateAIResponse("too short");
+              //   setVoiceEmotion("too short", 0, []);
+              //   return;
+              // }
+
+              // Check for too short (under 2 seconds) before calling backend
+              if (duration < 4000 || blob.size < 75000) {
+                console.warn("Frontend check: Voice input too short — skipping backend prediction");
+                stopListening(); 
+                await generateAIResponse("too short");
+                setVoiceEmotion("too short", 0, []);
+                return;
+              }
+
+              // Check for too soft
+              if (blob.size < 85000) {
+                console.warn("Too soft — skipping backend prediction");
+                stopListening();
+                await generateAIResponse("too soft");
+                setVoiceEmotion("too soft", 0, []);
+                return;
+              }
+
               forceStopRef.current = true;
 
           
