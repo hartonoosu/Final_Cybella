@@ -1,9 +1,11 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-// Trigger words
-const LEVEL_1_TRIGGERS = ["anxious", "depressed", "overwhelmed", "hopeless", "sad", "stressed", "too much"];
-const LEVEL_2_TRIGGERS = ["suicide", "want to die", "kill myself", "end it", "can't go on", "don't want to live", "dont wanna live", "don't wanna leave", "don't want to leave"];
+// Trigger words for Beyond Blue
+const LEVEL_1_TRIGGERS = ["anxious", "depressed", "overwhelmed", "hopeless", "sad", "stressed", "too much", "scared"];
+
+// Trigger words for Lifeline
+const LEVEL_2_TRIGGERS = ["suicide", "want to die", "wanna die", "kill myself", "end it", "can't go on", "don't want to live", "don't wanna live", "don't wanna leave", "don't want to leave"];
 
 interface UserMessageProps {
   text: string;
@@ -20,7 +22,8 @@ const getSupportInfo = (text: string): "beyondblue" | "lifeline" | null => {
 
 const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
   const support = getSupportInfo(text);
-
+  
+  // To return a new Warning card after Speech-To-Text card
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-start gap-3 justify-end">
@@ -33,6 +36,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
         </Avatar>
       </div>
 
+      {/* Beyondblue card  */}
       {support === "beyondblue" && (
         <div className="bg-blue-50 border border-blue-300 text-blue-900 p-3 rounded-md text-sm max-w-md mx-auto shadow-sm text-center">
           <strong>It’s okay to feel this way.</strong> I’m here with you.
@@ -57,7 +61,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
           </div>
         </div>
       )}
-
+      {/* Lifeline card */}
       {support === "lifeline" && (
        <div className="bg-red-50 border border-red-300 text-red-800 p-3 rounded-md text-sm max-w-md mx-auto shadow-sm text-center">
         <strong>You are not alone.</strong> I'm really glad you reached out.
