@@ -6,6 +6,8 @@ export interface SegmentEmotion {
   end: number;
   emotion: string;
   confidence: number;
+  startTime: string;
+  endTime: string;  
 }
 
 interface VoiceEmotionContextType {
