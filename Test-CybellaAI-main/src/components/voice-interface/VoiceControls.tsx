@@ -112,7 +112,7 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
               }
 
               // Check for too soft
-              if (blob.size < 85000) {
+              if (blob.size < 80000) {
                 console.warn("Too soft — skipping backend prediction");
                 stopListening();
                 await generateAIResponse("too soft");

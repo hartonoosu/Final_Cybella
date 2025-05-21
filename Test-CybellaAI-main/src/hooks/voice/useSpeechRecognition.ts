@@ -39,11 +39,14 @@ export function useSpeechRecognition({
       language: 'en-US'
     });
 
+    let sttHoldTimeout: NodeJS.Timeout | null = null;
+
     speechRecognition.onResult((transcript, isFinal) => {
       if (isFinal) {
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        if (sttHoldTimeout) clearTimeout(sttHoldTimeout);
 
-        debounceTimer.current = setTimeout(() => {
+        // Hold for 1.5s in case user speaks again
+        sttHoldTimeout = setTimeout(() => {
           setTranscription(transcript);
           setInterimTranscript("");
 
@@ -54,12 +57,18 @@ export function useSpeechRecognition({
           if (forceStopRef.current) {
             stopListening();
           }
-
-        }, 2000); // wait 2 seconds of silence
+        }, 1500); // 1.5s hold to check if user continues
       } else {
+        if (sttHoldTimeout) clearTimeout(sttHoldTimeout); // cancel previous send
         setInterimTranscript(transcript);
       }
     });
+
+speechRecognition.onEnd(() => {
+  // Don't trigger anything immediately — wait for timeout logic
+  setIsListening(false);
+});
+
 
     speechRecognition.onEnd(() => {
       setIsListening(false);
