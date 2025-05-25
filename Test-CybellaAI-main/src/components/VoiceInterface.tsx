@@ -585,6 +585,7 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
   const [emotionFrames, setEmotionFrames] = useState<DetectedEmotion[]>([]);
   const [emotionSummary, setEmotionSummary] = useState<string>("");
   const [emotionData, setEmotionData] = useState<any[]>([]);
+  const [voiceGender, setVoiceGender] = useState<"male" | "female">("male");
 
   /**
    * Scroll to Bottom
@@ -740,6 +741,7 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
                 text={msg.text}
                 autoplay={isLastAI} // only autoplay the last AI message
                 showControls={isLastAI} // only show play/stop buttons for the last one
+                voiceGender={voiceGender}
               />
             );
           })}
@@ -764,6 +766,8 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
           connectionIssue={connectionIssue}
           setVoiceEmotion={voice.setVoiceEmotion}
           stopListening={voice.stopListening}
+          voiceGender={voiceGender}
+          setVoiceGender={setVoiceGender}
         />
       </div>
     </Card>

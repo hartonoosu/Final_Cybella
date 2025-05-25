@@ -8,12 +8,14 @@ import VolumeSlider from "./voice-playback/VolumeSlider";
 interface VoicePlaybackProps {
   text: string;
   autoplay?: boolean;
+  voiceGender: "male" | "female";
 }
 
-const VoicePlayback: React.FC<VoicePlaybackProps> = ({ text, autoplay = false }) => {
+const VoicePlayback: React.FC<VoicePlaybackProps> = ({ text, autoplay = false, voiceGender }) => {
   const { isPlaying, isMuted, volume, handlePlay, handleStop, toggleMute, handleVolumeChange } = useSpeechSynthesis({
     text,
-    autoplay
+    autoplay,
+    voiceGender
   });
 
   if (!text) return null;
