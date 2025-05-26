@@ -57,7 +57,7 @@ export function useSpeechRecognition({
           if (forceStopRef.current) {
             stopListening();
           }
-        }, 1500); // 1.5s hold to check if user continues
+        }, 2000); // 1.5s hold to check if user continues
       } else {
         if (sttHoldTimeout) clearTimeout(sttHoldTimeout); // cancel previous send
         setInterimTranscript(transcript);
