@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 270 53% 94%;
+    --foreground: 260 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 260 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 47% 11%;
+
+    --primary: 270 53% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 280 52% 80%;
+    --secondary-foreground: 260 47% 11%;
+
+    --muted: 260 40% 96%;
+    --muted-foreground: 260 16% 47%;
+
+    --accent: 262 40% 90%;
+    --accent-foreground: 260 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 260 32% 91%;
+    --input: 260 32% 91%;
+    --ring: 260 47% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 260 5% 26%;
+    --sidebar-primary: 270 6% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 270 5% 96%;
+    --sidebar-accent-foreground: 270 6% 10%;
+    --sidebar-border: 270 13% 91%;
+    --sidebar-ring: 270 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 260 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 195 53% 40%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 262 30% 25%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 213 27% 84%;
+
+    --sidebar-background: 240 6% 10%;
+    --sidebar-foreground: 240 5% 96%;
+    --sidebar-primary: 224 76% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent-foreground: 240 5% 96%;
+    --sidebar-border: 240 4% 16%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  .text-2xs {
+    font-size: 0.65rem;
+    line-height: 0.95rem;
+  }
+    
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.audio-wave {
+  @apply flex items-end h-16 space-x-1;
+}
+
+.audio-wave-bar {
+  @apply bg-primary w-1 rounded-t-md;
+  animation: wave 0.5s ease-in-out infinite;
+  animation-delay: calc(0.05s * var(--delay));
+}
+
+@layer components {
+  .voice-button {
+    @apply relative inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary text-primary-foreground shadow-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors duration-300;
+  }
+
+  .voice-button-active {
+    @apply animate-pulse-gentle ring-4;
+  }
+  
+  .emotion-tag {
+    @apply px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .emotion-happy {
+    @apply bg-therapeutic-soothing text-white;
+  }
+  
+  .emotion-sad {
+    @apply bg-therapeutic-tranquil text-gray-700;
+  }
+  
+  .emotion-neutral {
+    @apply bg-therapeutic-serene text-gray-700;
+  }
+  
+  .emotion-angry {
+    @apply bg-red-300 text-white;
+  }
+  
+  .emotion-surprised {
+    @apply bg-therapeutic-relaxed text-gray-700;
+  }
+  
+  .emotion-fearful {
+    @apply bg-therapeutic-peaceful text-gray-700;
+  }
+  /* Add purple-themed utility classes */
+  .bg-purple-gradient {
+    @apply bg-gradient-to-b from-[#8B5CF6] to-[#C4B5FD];
+  }
+  
+  .purple-card {
+    @apply bg-white/20 backdrop-blur-md border border-purple-300/30 rounded-lg;
+  }
+  
+  .purple-button {
+    @apply bg-purple-600 text-white hover:bg-purple-700 transition-colors;
+  }
+}
+
+.face-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* New animation for notification bell */
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  50% {
+    transform: translateY(-5px) translateX(-50%);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Shadow glow effect */
+.shadow-glow {
+  box-shadow: 0 0 5px rgba(139, 92, 246, 0.6);
+}
+
+/* Purple glow effect */
+.shadow-purple-glow {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+}

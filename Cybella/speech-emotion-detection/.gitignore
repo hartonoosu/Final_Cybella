@@ -1,0 +1,49 @@
+# Dataset-related
+*.zip
+*.tar.gz
+*.tar
+*.npy
+*.npz
+*.wav
+*.mp3
+
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.DS_Store
+*.py[cod]
+
+# Virtual environment
+venv/
+venv311/
+env/
+
+# Model outputs
+fine-tuned-wav2vec2-ravdess/
+fine-tuned-wav2vec2-crema-d/
+results/
+logs/
+
+# Datasets (optional, if big)
+dataset/
+archive/
+
+# Checkpoints (if any)
+checkpoint/
+checkpoints/
+
+# Jupyter stuff (if used)
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+
+# IDE/project settings
+.vscode/
+.idea/

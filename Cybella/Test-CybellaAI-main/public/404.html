@@ -1,0 +1,21 @@
+<!-- public/404.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script type="text/javascript">
+      // Check if the pathname already includes the base path
+      var basePath = "/Test-CybellaAI";
+      var currentPath = window.location.pathname;
+
+      if (!currentPath.startsWith(basePath)) {
+        // If the path doesn't start with /Test-CybellaAI, redirect
+        window.location.replace(basePath + currentPath);
+      } else {
+        // If already at /Test-CybellaAI, load index.html (let React handle it)
+        window.location.replace(basePath + "/");
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
