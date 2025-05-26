@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 interface UseSpeechSynthesisProps {
   text: string;
   autoplay?: boolean;
+  voiceGender: "male" | "female";
 }
 
 // Interface for hook return value
@@ -22,7 +23,8 @@ interface UseSpeechSynthesisReturn {
 // Speech Synthesis Hook
 export function useSpeechSynthesis({ 
   text, 
-  autoplay = false 
+  autoplay = false,
+  voiceGender 
 }: UseSpeechSynthesisProps): UseSpeechSynthesisReturn {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -62,7 +64,7 @@ export function useSpeechSynthesis({
     // Force stop backend mic if it's still recording
     const stopBtn = document.getElementById("force-stop-recording");
     if (stopBtn) {
-      console.log("🔊 AI voice about to speak — forcing backend mic to stop");
+      console.log("AI voice about to speak — forcing backend mic to stop");
       stopBtn.click();
     }
 
@@ -75,16 +77,41 @@ export function useSpeechSynthesis({
     // Create and configure a new utterance
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.volume = volume;
+    utterance.rate = 1.1;
     speechRef.current = utterance;
     utterance.volume = isMuted ? 0 : volume;
     utterance.lang = voiceLanguage;
     
-    // Try to find a matching voice for English
     const voices = window.speechSynthesis.getVoices();
-    const matchingVoice = voices.find(voice => voice.lang.startsWith(voiceLanguage));
-    
-    if (matchingVoice) {
-      utterance.voice = matchingVoice;
+
+    // Try to find a matching voice for English
+    const preferredVoices = voiceGender === "male"
+  ? ["Google UK English Male", "Daniel (English (United Kingdom))"]
+  : ["Google UK English Female", "Samantha", "Karen", "Catherine"];
+
+    const matchingVoice =voices.find(v => preferredVoices.includes(v.name))||voices.find(v => v.lang.startsWith(voiceLanguage));
+
+    // If voices are not yet loaded (or no match found), wait and retry
+    if (!matchingVoice && typeof window !== "undefined") {
+      window.speechSynthesis.onvoiceschanged = () => {
+        const loadedVoices = window.speechSynthesis.getVoices();
+        const fallbackVoice = loadedVoices.find(v => preferredVoices.includes(v.name)) 
+                          || loadedVoices.find(v => v.lang.startsWith(voiceLanguage));
+
+        if (fallbackVoice) {
+          utterance.voice = fallbackVoice;
+          utterance.rate = fallbackVoice.name === "Samantha" ? 1.05 : 1.18;
+          utterance.pitch = fallbackVoice.name === "Samantha" ? 0.7 : 1.2; 
+
+          window.speechSynthesis.speak(utterance);
+        }
+      };
+    } else {
+      utterance.voice = matchingVoice!;
+      utterance.rate = matchingVoice.name === "Samantha" ? 1.05 : 1.18;
+      utterance.pitch = matchingVoice.name === "Samantha" ? 0.7 : 1.2;;
+
+      window.speechSynthesis.speak(utterance);
     }
     
     // Set up event handlers
@@ -92,9 +119,8 @@ export function useSpeechSynthesis({
     utterance.onend = () => setIsPlaying(false);
     utterance.onerror = () => setIsPlaying(false);
     
-    // Store the utterance and start playing
+    // Store the utterance
     speechRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
   };
   
   const handleStop = () => {

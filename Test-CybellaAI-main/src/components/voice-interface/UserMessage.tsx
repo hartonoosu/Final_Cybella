@@ -22,7 +22,6 @@ const getSupportInfo = (text: string): "beyondblue" | "lifeline" | null => {
 
 const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
   const support = getSupportInfo(text);
-  
   // To return a new Warning card after Speech-To-Text card
   return (
     <div className="flex flex-col gap-2">

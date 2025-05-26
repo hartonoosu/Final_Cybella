@@ -3,7 +3,6 @@
   "homepage": "https://gajerarishi.github.io/Test-CybellaAI/",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

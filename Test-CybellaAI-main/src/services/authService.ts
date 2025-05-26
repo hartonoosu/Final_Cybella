@@ -1,3 +1,6 @@
+import axios from "axios";
+import { AuthResponse, RegisterData } from "./auth";
+import { API_URL } from "./auth/authApiUtils";
 // Re-export from the new modular structure
 export * from './auth';
 

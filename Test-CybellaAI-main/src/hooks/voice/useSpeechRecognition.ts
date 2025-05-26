@@ -20,7 +20,8 @@ export function useSpeechRecognition({
     (typeof window.SpeechRecognition !== 'undefined' || typeof window.webkitSpeechRecognition !== 'undefined');
 
      const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-  
+     const forceStopRef = useRef(false);
+
   useEffect(() => {
     if (!speechRecognitionSupported) {
       toast({
@@ -36,12 +37,13 @@ export function useSpeechRecognition({
       interimResults: true,
       language: 'en-US'
     });
-
+    let sttHoldTimeout: NodeJS.Timeout | null = null;
     speechRecognition.onResult((transcript, isFinal) => {
       if (isFinal) {
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        if (sttHoldTimeout) clearTimeout(sttHoldTimeout);
 
-        debounceTimer.current = setTimeout(() => {
+        // Hold for 1.5s in case user speaks again
+        sttHoldTimeout = setTimeout(() => {
           setTranscription(transcript);
           setInterimTranscript("");
 
@@ -49,14 +51,22 @@ export function useSpeechRecognition({
             onTranscriptionComplete(transcript);
           }
 
-          if (isListening) {
+          if (forceStopRef.current) {
             stopListening();
           }
-        }, 2000); // wait 2 seconds of silence
+        }, 1500); // 1.5s hold to check if user continues
       } else {
+        if (sttHoldTimeout) clearTimeout(sttHoldTimeout); // cancel previous send
         setInterimTranscript(transcript);
       }
     });
+
+    speechRecognition.onEnd(() => {
+  // Don't trigger anything immediately — wait for timeout logic
+  setIsListening(false);
+});
+
+
 
     speechRecognition.onEnd(() => {
       setIsListening(false);
@@ -64,7 +74,7 @@ export function useSpeechRecognition({
   }, [isListening, speechRecognitionSupported, onTranscriptionComplete]);
   
   const toggleListening = async () => {
-    if (isListening) {
+    if (forceStopRef.current) {
       stopListening();
     } else {
       await startListening();
@@ -75,6 +85,7 @@ export function useSpeechRecognition({
     if (!sessionActive || !speechRecognitionSupported) return;
     
     try {
+      forceStopRef.current = false;
       await speechRecognition.start();
       setIsListening(true);
     } catch (error) {
@@ -102,5 +113,6 @@ export function useSpeechRecognition({
     stopListening,
     setTranscription,
     setInterimTranscript,
+    forceStopRef,
   };
 }

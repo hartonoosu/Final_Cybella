@@ -22,6 +22,8 @@ interface VoiceControlsProps {
   toggleListening: () => void;
   setVoiceEmotion: (emotion: Emotion, confidence: number, top3?: { emotion: Emotion; confidence: number }[]) => void; 
   stopListening: () => void;
+  voiceGender: "male" | "female";
+  setVoiceGender: (gender: "male" | "female") => void;
 }
 
 const VoiceControls: React.FC<VoiceControlsProps> = ({
@@ -32,12 +34,14 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
   connectionIssue = false,
   toggleListening,
   setVoiceEmotion,
-  stopListening
+  stopListening,
+  voiceGender,
+  setVoiceGender
 }) => {
   const isMobile = useIsMobile();
 
   const {
-    detectVoiceEmotion, generateAIResponse
+    detectVoiceEmotion, generateAIResponse, forceStopRef
   } = useVoiceProcessing({
     sessionActive,
     onVoiceEmotionDetected: (emotion, confidence, top3) => {
@@ -81,7 +85,17 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        
+        {/* <div className="absolute left-5 ml-2 text-xs font-medium text-muted-foreground flex items-center space-x-1"> */}
+        <div className="ml-2 text-xs font-medium text-muted-foreground flex items-center space-x-1">
+          {/* <span>AI VOICE:</span> */}
+          <select
+            value={voiceGender}
+            onChange={(e) => setVoiceGender(e.target.value as "male" | "female")}
+            className="border border-purple-500 bg-purple-100 text-black text-xs rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-purple-400">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
         <Button 
           variant="default" 
           size="icon" 
@@ -89,11 +103,56 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
           disabled={!sessionActive || processingInput || connectionIssue}
           aria-label={isListening ? "Stop listening" : "Start listening"}
           onClick={async () => {
-            toggleListening(); // IMMEDIATELY reflect UI change (mic turns red, visualizer starts)
+            // toggleListening(); // IMMEDIATELY reflect UI change (mic turns red, visualizer starts)
           
-            if (!isListening) {
-              const {blob, duration} = await recordVoice();
-          
+            // if (!isListening) {
+            //   const {blob, duration} = await recordVoice();
+            //   // Check for too short before calling backend
+              // if (blob.size < 70000) {
+              //   console.warn("Frontend check: Voice input too short — skipping backend prediction");
+              //   stopListening(); 
+              //   await generateAIResponse("too short");
+              //   setVoiceEmotion("too short", 0, []);
+              //   return;
+              // }
+            if (isListening) {
+              console.log(" Manual stop triggered from mic button");
+              (window as any).manualStop = true;
+              document.getElementById("force-stop-recording")?.click();
+              return;
+            }
+              // // Check for too short (under 2 seconds) before calling backend
+              // if (duration < 4000 || blob.size < 75000) {
+              //   console.warn("Frontend check: Voice input too short — skipping backend prediction");
+              //   stopListening(); 
+              //   await generateAIResponse("too short");
+              //   setVoiceEmotion("too short", 0, []);
+              //   return;
+              // }
+
+            toggleListening(); // Immediately reflect UI change (mic turns red)
+
+              // // Check for too soft
+              // if (blob.size < 80000) {
+              //   console.warn("Too soft — skipping backend prediction");
+              //   stopListening();
+              //   await generateAIResponse("too soft");
+              //   setVoiceEmotion("too soft", 0, []);
+              //   return;
+              // }
+
+              const { blob, duration } = await recordVoice();
+
+              // forceStopRef.current = true;
+
+              if (duration < 4000 || blob.size < 75000) {
+                  console.warn("Frontend check: Voice input too short — skipping backend prediction");
+                  stopListening();
+                  await generateAIResponse("too short");
+                  setVoiceEmotion("too short", 0, []);
+                  return;
+              }
+
               // Download voice blob (optional)
               // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
               // const url = URL.createObjectURL(blob);
@@ -106,9 +165,20 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
               // document.body.removeChild(a);
               // console.log("Voice downloaded (once)");
           
-              stopListening(); // ← force stop speech-to-text once backend recording finishes
-              await detectVoiceEmotion(blob); // Trigger emotion prediction
+              // stopListening(); // ← force stop speech-to-text once backend recording finishes
+              // await detectVoiceEmotion(blob); // Trigger emotion prediction
+
+              if (blob.size < 80000) {
+                console.warn("Too soft — skipping backend prediction");
+                stopListening();
+                await generateAIResponse("too soft");
+                setVoiceEmotion("too soft", 0, []);
+                return;
             }
+
+            forceStopRef.current = true;
+            stopListening();
+            await detectVoiceEmotion(blob);
           }}      
         >
           {isListening ? 

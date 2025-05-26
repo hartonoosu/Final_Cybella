@@ -41,7 +41,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/lib/db.js"  ],
   "exclude": [
     "node_modules"
   ]
