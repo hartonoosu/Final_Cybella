@@ -1,6 +1,13 @@
 let recording = false;
+declare global {
+  interface Window {
+    manualStop?: boolean;
+  }
+}
+
 
 export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
+  window.manualStop = false; 
   if (recording) {
     console.warn("Already recording — skipping this call");
     return { blob: new Blob(), duration: 0 }; // return empty blob if recording is already active
@@ -41,7 +48,9 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
 
   const stopRecording = () => {
     if (!hasStopped && mediaRecorder.state === "recording") {
-      console.log("Calling mediaRecorder.stop() at:", new Date().toLocaleTimeString());
+      const reason = window.manualStop ? "Manual Stop Button" : "Auto/AI/Silence";
+      console.log(`Calling mediaRecorder.stop() — Reason: ${reason} — at`, new Date().toLocaleTimeString());
+      // console.log("Calling mediaRecorder.stop() at:", new Date().toLocaleTimeString());
       mediaRecorder.stop();
       clearInterval(volumeInterval);
       source.disconnect();
@@ -55,23 +64,31 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
     stopButton.id = "force-stop-recording";
     stopButton.style.display = "none";
     stopButton.onclick = () => {
-      console.log("Forced stop triggered from AI voice or silence");
-      stopRecording(); // uses the stopRecording defined above
+      console.log(" Manual stop button clicked by user");
+      window.manualStop = true;
+      stopRecording();
     };
     document.body.appendChild(stopButton);
-  }
+}
+
 
   // Start volume check loop
   const checkVolume = () => {
     analyser.getByteFrequencyData(dataArray);
     const currentVolume = dataArray.reduce((a, b) => a + b) / bufferLength;
 
+    if (window.manualStop) {
+      console.log(" Manual stop detected inside recorder");
+      window.manualStop = false;
+      stopRecording();
+      return;
+    }
+
     if (calibrationFrames < calibrationLimit) {
       baselineVolume += currentVolume;
       calibrationFrames++;
       return;
     }
-
     const averageBaseline = baselineVolume / calibrationLimit;
     const dynamicThreshold = Math.min(Math.max(averageBaseline * 2.5, 1.5), 8);
     console.log(`[Volume Check] Volume: ${currentVolume.toFixed(2)} | Threshold: ${dynamicThreshold.toFixed(2)}`);
@@ -91,6 +108,7 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
 
   let volumeInterval: NodeJS.Timeout;
 
+  
   return new Promise((resolve) => {
     mediaRecorder.ondataavailable = (e) => {
       if (e.data.size > 0) {
@@ -127,6 +145,8 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
 
       recording = false;
       resolve({blob, duration});
+      window.manualStop = false;
+
     };
 
     console.log("Warming up mic — please wait 0.3 second before speaking...");

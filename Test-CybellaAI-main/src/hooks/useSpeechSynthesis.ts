@@ -81,7 +81,7 @@ export function useSpeechSynthesis({
     speechRef.current = utterance;
     utterance.volume = isMuted ? 0 : volume;
     utterance.lang = voiceLanguage;
-    
+
     const voices = window.speechSynthesis.getVoices();
 
     // Try to find a matching voice for English
@@ -113,7 +113,8 @@ export function useSpeechSynthesis({
 
       window.speechSynthesis.speak(utterance);
     }
-    
+
+
     // Set up event handlers
     utterance.onstart = () => setIsPlaying(true);
     utterance.onend = () => setIsPlaying(false);

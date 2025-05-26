@@ -37,7 +37,9 @@ export function useSpeechRecognition({
       interimResults: true,
       language: 'en-US'
     });
+
     let sttHoldTimeout: NodeJS.Timeout | null = null;
+
     speechRecognition.onResult((transcript, isFinal) => {
       if (isFinal) {
         if (sttHoldTimeout) clearTimeout(sttHoldTimeout);
@@ -54,12 +56,18 @@ export function useSpeechRecognition({
           if (forceStopRef.current) {
             stopListening();
           }
-        }, 1500); // 1.5s hold to check if user continues
+        }, 2000); // 1.5s hold to check if user continues
       } else {
         if (sttHoldTimeout) clearTimeout(sttHoldTimeout); // cancel previous send
         setInterimTranscript(transcript);
       }
     });
+
+speechRecognition.onEnd(() => {
+  // Don't trigger anything immediately — wait for timeout logic
+  setIsListening(false);
+});
+
 
     speechRecognition.onEnd(() => {
   // Don't trigger anything immediately — wait for timeout logic

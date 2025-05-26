@@ -224,6 +224,7 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
               />
             );
           })}
+          
           <UserTranscription
             transcription={voice.transcription}
             interimTranscript={voice.interimTranscript}
