@@ -552,6 +552,8 @@ interface VoiceInterfaceProps {
   onVoiceLoadingChange?: (isLoading: boolean) => void;
   isOnline?: boolean;
   sessionActive?: boolean;
+  voiceGender: "male" | "female";
+  setVoiceGender: (gender: "male" | "female") => void;
 }
 
 const MAX_FRAMES = 15;
@@ -564,6 +566,8 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
   onVoiceLoadingChange,
   isOnline = true,
   sessionActive: externalSessionActive,
+  voiceGender,
+  setVoiceGender
 }) => {
   const { user } = useAuth();
   const isControlledComponent = externalSessionActive !== undefined;
@@ -585,7 +589,6 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
   const [emotionFrames, setEmotionFrames] = useState<DetectedEmotion[]>([]);
   const [emotionSummary, setEmotionSummary] = useState<string>("");
   const [emotionData, setEmotionData] = useState<any[]>([]);
-  const [voiceGender, setVoiceGender] = useState<"male" | "female">("male");
 
   /**
    * Scroll to Bottom
@@ -624,7 +627,7 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
         calculateEmotionSummary();
       }
     }
-  }, [actualSessionActive, voice, user]);
+  }, [actualSessionActive, voice, user, voiceGender]);
 
   /**
    * Store Emotion Frames (Up to 15 Frames)

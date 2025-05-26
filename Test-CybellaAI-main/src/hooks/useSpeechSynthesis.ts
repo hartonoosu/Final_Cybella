@@ -100,16 +100,16 @@ export function useSpeechSynthesis({
 
         if (fallbackVoice) {
           utterance.voice = fallbackVoice;
-          utterance.rate = fallbackVoice.name === "Samantha" ? 1.05 : 1.25;
-          utterance.pitch = fallbackVoice.name === "Samantha" ? 0.7 : 1.15; 
+          utterance.rate = fallbackVoice.name === "Samantha" ? 1.05 : 1.18;
+          utterance.pitch = fallbackVoice.name === "Samantha" ? 0.7 : 1.2; 
 
           window.speechSynthesis.speak(utterance);
         }
       };
     } else {
       utterance.voice = matchingVoice!;
-      utterance.rate = matchingVoice.name === "Samantha" ? 1.05 : 1.25;
-      utterance.pitch = matchingVoice.name === "Samantha" ? 0.7 : 1.15;;
+      utterance.rate = matchingVoice.name === "Samantha" ? 1.05 : 1.18;
+      utterance.pitch = matchingVoice.name === "Samantha" ? 0.7 : 1.2;;
 
       window.speechSynthesis.speak(utterance);
     }
