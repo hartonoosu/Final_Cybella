@@ -75,9 +75,10 @@ const FacialRecognitionInner: React.FC<FacialRecognitionProps> = ({
   const logEmotionToTerminal = async (emotion: Emotion, confidence: number) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '';
+      const token = localStorage.getItem("token"); //Get the JWT token from localStorage
       
       // Skip logging if no API URL is configured
-      if (!apiUrl || !isActive) return;
+      if (!apiUrl || !isActive || !token) return;
       
       // Create the endpoint URL - add '/log-emotion' to the API URL
       const endpoint = `${apiUrl}/log-emotion`;
@@ -86,6 +87,7 @@ const FacialRecognitionInner: React.FC<FacialRecognitionProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           timestamp: new Date().toISOString(),

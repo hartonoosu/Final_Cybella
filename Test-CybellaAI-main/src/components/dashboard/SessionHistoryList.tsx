@@ -77,7 +77,6 @@ const SessionHistoryList: React.FC<SessionHistoryListProps> = ({ sessions }) => 
                     <TableHead>Time</TableHead>
                     <TableHead>Duration</TableHead>
                     <TableHead>Emotions Detected</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -101,15 +100,6 @@ const SessionHistoryList: React.FC<SessionHistoryListProps> = ({ sessions }) => 
                           <ChartBarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
                           {session.emotionCount}
                         </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => viewSession(session)}
-                        >
-                          View Details
-                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

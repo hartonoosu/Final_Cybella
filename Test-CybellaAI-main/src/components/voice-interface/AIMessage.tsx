@@ -9,7 +9,7 @@ interface AIMessageProps {
   voiceGender: "male" | "female";
 }
 
-const AIMessage: React.FC<AIMessageProps> = ({ text, autoplay = false, showControls = false, voiceGender }) => {
+const AIMessage: React.FC<AIMessageProps> = ({ text, autoplay = false, showControls = false,voiceGender }) => {
   return (
     <div className="flex items-start gap-2">
       <Avatar className="border border-primary bg-primary/10 h-8 w-8">
@@ -20,7 +20,7 @@ const AIMessage: React.FC<AIMessageProps> = ({ text, autoplay = false, showContr
         <p className="text-sm">{text}</p>
         {showControls && (
           <div className="mt-2 flex justify-end">
-            <VoicePlayback text={text} autoplay={true} voiceGender={voiceGender}/>
+            <VoicePlayback text={text} autoplay={true} voiceGender={voiceGender} />
           </div>
         )}
       </div>

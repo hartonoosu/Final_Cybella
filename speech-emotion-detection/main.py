@@ -258,9 +258,11 @@ async def predict(file: UploadFile = File(...)):
         response = {
             "emotion": result["emotion"],
             "confidence": confidence,
+        }
+        return {
+            **result,
             "message": "Emotion detected successfully"
         }
-        return response
 
     except Exception as e:
         print(f"Prediction error: {e}")

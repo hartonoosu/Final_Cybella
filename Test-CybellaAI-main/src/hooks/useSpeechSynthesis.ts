@@ -23,8 +23,8 @@ interface UseSpeechSynthesisReturn {
 // Speech Synthesis Hook
 export function useSpeechSynthesis({ 
   text, 
-  autoplay = false, 
-  voiceGender
+  autoplay = false,
+  voiceGender 
 }: UseSpeechSynthesisProps): UseSpeechSynthesisReturn {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -81,15 +81,15 @@ export function useSpeechSynthesis({
     speechRef.current = utterance;
     utterance.volume = isMuted ? 0 : volume;
     utterance.lang = voiceLanguage;
-    
-  
+
     const voices = window.speechSynthesis.getVoices();
+
+    // Try to find a matching voice for English
     const preferredVoices = voiceGender === "male"
   ? ["Google UK English Male", "Daniel (English (United Kingdom))"]
   : ["Google UK English Female", "Samantha", "Karen", "Catherine"];
 
-    const matchingVoice = voices.find(v => preferredVoices.includes(v.name)) 
-                      || voices.find(v => v.lang.startsWith(voiceLanguage));
+    const matchingVoice =voices.find(v => preferredVoices.includes(v.name))||voices.find(v => v.lang.startsWith(voiceLanguage));
 
     // If voices are not yet loaded (or no match found), wait and retry
     if (!matchingVoice && typeof window !== "undefined") {
@@ -120,7 +120,7 @@ export function useSpeechSynthesis({
     utterance.onend = () => setIsPlaying(false);
     utterance.onerror = () => setIsPlaying(false);
     
-    // Store the utterance 
+    // Store the utterance
     speechRef.current = utterance;
   };
   

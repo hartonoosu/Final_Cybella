@@ -22,7 +22,6 @@ export function useSpeechRecognition({
      const debounceTimer = useRef<NodeJS.Timeout | null>(null);
      const forceStopRef = useRef(false);
 
-  
   useEffect(() => {
     if (!speechRecognitionSupported) {
       toast({
@@ -71,12 +70,19 @@ speechRecognition.onEnd(() => {
 
 
     speechRecognition.onEnd(() => {
+  // Don't trigger anything immediately — wait for timeout logic
+  setIsListening(false);
+});
+
+
+
+    speechRecognition.onEnd(() => {
       setIsListening(false);
     });
   }, [isListening, speechRecognitionSupported, onTranscriptionComplete]);
   
   const toggleListening = async () => {
-    if (isListening) {
+    if (forceStopRef.current) {
       stopListening();
     } else {
       await startListening();

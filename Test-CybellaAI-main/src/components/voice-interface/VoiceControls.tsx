@@ -24,7 +24,6 @@ interface VoiceControlsProps {
   stopListening: () => void;
   voiceGender: "male" | "female";
   setVoiceGender: (gender: "male" | "female") => void;
-  
 }
 
 const VoiceControls: React.FC<VoiceControlsProps> = ({
@@ -86,19 +85,19 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="absolute left-5 ml-2 text-xs font-medium text-muted-foreground flex items-center space-x-1">
-      {/* <span>AI VOICE:</span> */}
-      <select
-        value={voiceGender}
-        onChange={(e) => setVoiceGender(e.target.value as "male" | "female")}
-        className="border border-purple-500 bg-purple-100 text-black text-xs rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-purple-400"
-      >
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
-    </div>
 
-        
+        <div className="absolute left-5 ml-2 text-xs font-medium text-muted-foreground flex items-center space-x-1">
+          {/* <span>AI VOICE:</span> */}
+          <select
+            value={voiceGender}
+            onChange={(e) => setVoiceGender(e.target.value as "male" | "female")}
+            className="border border-purple-500 bg-purple-100 text-black text-xs rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          >
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
         <Button 
           variant="default" 
           size="icon" 

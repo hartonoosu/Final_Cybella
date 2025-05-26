@@ -6,6 +6,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { recordVoice } from "../utils/voiceRecorder";
 import { getRealVoiceEmotion } from "@/utils/emotionAPI";
 import { useSpeechRecognition } from "@/hooks/voice/useSpeechRecognition";
+import { useVoiceEmotionContext } from "@/contexts/VoiceEmotionContext";
+
 
 // Audio visualization hook
 export function useAudioVisualization(isListening: boolean) {
@@ -128,6 +130,9 @@ export function useVoiceSession({
 }) {
   const [sessionActive, setSessionActive] = useState<boolean>(false);
 
+  // Destructure the context function to set segment data globally
+  const { setSegmentEmotions } = useVoiceEmotionContext();
+
   const startSession = () => {
     setSessionActive(true);
 
@@ -197,6 +202,8 @@ export function useVoiceProcessing({
     { role: "user" | "ai"; text: string }[]
   >([]);
 
+  const { setSegmentEmotions } = useVoiceEmotionContext();
+
   const {
     aiResponse,
     shouldPlayVoice,
@@ -207,13 +214,13 @@ export function useVoiceProcessing({
   } = useAIResponse();
 
   /**
-   * Manually Set Voice Emotion
+   * Set Voice Emotion
    */
   const setVoiceEmotion = (emotion: Emotion, confidence: number) => {
     setDetectedEmotion(emotion);
     setEmotionConfidence(confidence);
 
-    console.log(`Manually Set Emotion: ${emotion} with confidence: ${confidence}`);
+    console.log(`Set Emotion: ${emotion} with confidence: ${confidence}`);
 
     if (onVoiceEmotionDetected) {
       onVoiceEmotionDetected(emotion, confidence);
@@ -250,7 +257,38 @@ export function useVoiceProcessing({
           top3?: { emotion: Emotion; confidence: number }[];
         };
 
-        const result = (await getRealVoiceEmotion(blob)) as EmotionAPIResult;
+        const recordingStartedAt = new Date(); // get real-world recording time
+        const result = await getRealVoiceEmotion(blob) as EmotionAPIResult & { segments?: any[] };
+
+        // Store segment-wise emotion results in global context so all pages can access
+        if (result.segments) {
+          const segmentsWithTime = result.segments.map((seg) => {
+            const segmentStartTime = new Date(recordingStartedAt.getTime() + seg.start * 1000);
+            const segmentEndTime = new Date(recordingStartedAt.getTime() + seg.end * 1000);
+
+            return {
+              start: seg.start,
+              end: seg.end,
+              startTime: segmentStartTime.toISOString(),
+              endTime: segmentEndTime.toISOString(),
+              emotion: seg.emotion,
+              confidence: seg.confidence,
+            };
+          });
+
+          setSegmentEmotions(segmentsWithTime);
+          console.log("Segment Emotions stored with time:", segmentsWithTime);
+        }
+
+        // Console log each segment to verify
+        if ("segments" in result && Array.isArray(result.segments)) {
+        console.log("Voice Emotion Segments (every 3s):");
+        result.segments.forEach((seg, i) => {
+          console.log(
+            `Segment ${i + 1}: ${seg.start}s – ${seg.end}s → ${seg.emotion} (${seg.confidence})`
+          );
+        });
+      }
 
         if (result.top3) {
           setTopEmotions(result.top3);

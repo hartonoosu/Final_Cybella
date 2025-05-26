@@ -71,12 +71,6 @@ export const FormFieldWithFeedback = <
               <FormControl>
                 {renderInput(field)}
               </FormControl>
-              
-              {displaySuccess && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-400">
-                  <CheckCircle size={18} />
-                </div>
-              )}
             </div>
             <FormMessage />
           </FormItem>

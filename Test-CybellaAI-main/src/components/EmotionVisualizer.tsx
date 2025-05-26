@@ -19,23 +19,23 @@ import { Emotion } from '@/components/EmotionDisplay';
 
 // Map emotions to consistent color values with purple theme
 const emotionColorMap: Record<Emotion, string> = {
-  happy: '#9b87f5',      // primary purple
-  sad: '#a78bfa',        // lavender
-  neutral: '#9ca3af',    // gray
-  angry: '#f87171',      // soft red
-  surprised: '#c084fc',  // bright purple
-  fearful: '#d8b4fe',    // light purple
-  stressed: '#fb923c',   // orange
-  anxious: '#c084fc',    // purple
-  depressed: '#7e69ab',  // dark purple
-  disgusted: '#9333ea',  // deep purple
-  contempt: '#e879f9',   // pink purple
-  confused: '#d8b4fe',   // light purple
-  calm:'',
-  disgust:'',
-  "too short":'',
-  "too soft":'',
-  "too noisy":'',
+  happy: '#ffd700',      // Golden Yellow (Joy, Positivity)
+  sad: '#6495ed',        // Cornflower Blue (Calm, Reflective)
+  neutral: '#a0aec0',    // Cool Gray (Balanced, Neutral)
+  angry: '#e63946',      // Bright Red (Intense, Urgent)
+  surprised: '#ffb703',  // Bright Orange (Alert, Sudden)
+  fearful: '#f94144',    // Deep Red (Fear, Alarm)
+  stressed: '#f9844a',   // Warm Orange (Pressure, Tension)
+  anxious: '#ffb703',    // Warm Orange (Nervous, On Edge)
+  depressed: '#4a5568',  // Dark Slate (Isolation, Low Energy)
+  disgusted: '#556b2f',  // Olive Green (Disgust, Aversion)
+  contempt: '#9f7aea',   // Soft Purple (Disdain, Superiority)
+  confused: '#d8b4fe',   // Light Purple (Uncertainty, Puzzled)
+  calm: '#86efac',       // Soft Green (Calm, Relaxation)
+  disgust: '#9ca3af',    // Muted Olive (Subtle Discomfort)
+  "too short": '#d1d5db', // Light Gray (Neutral, Insufficient Data)
+  "too soft": '#9ca3af',  // Soft Gray (Weak, Faint)
+  "too noisy": '#4b5563', // Dark Charcoal (Chaotic, Overwhelming)
 };
 
 // Mapping emotions to numeric values for the chart
@@ -96,16 +96,21 @@ const EmotionVisualizer: React.FC<EmotionVisualizerProps> = ({
   
   // Determine color for the line based on the most recent emotion
   const lineColor = useMemo(() => {
-    if (emotionData.length === 0 || !emotionData[emotionData.length - 1].emotion) {
-      return emotionColorMap.neutral;
+    if (emotionData.length === 0) {
+      return '#d1d5db'; // Light gray for empty state
     }
-    return emotionColorMap[emotionData[emotionData.length - 1].emotion];
+
+    const lastEmotion = emotionData[emotionData.length - 1].emotion;
+    
+    // Use the emotion color if it exists, otherwise default to neutral
+    return lastEmotion ? emotionColorMap[lastEmotion] : '#d1d5db';
   }, [emotionData]);
+
 
   return (
     <div className="w-full p-2 md:p-4 bg-purple-100/60 backdrop-blur-sm rounded-lg border border-purple-200 shadow-purple-glow">
       {title && <h3 className="text-sm md:text-base font-medium mb-2 text-center text-purple-900">{title}</h3>}
-      
+
       <div style={{ width: '100%', height: chartHeight }}>
         <ChartContainer 
           config={{
@@ -118,10 +123,8 @@ const EmotionVisualizer: React.FC<EmotionVisualizerProps> = ({
           <LineChart
             data={formattedData}
             margin={{
-              top: 5,
-              right: 10,
-              left: -20, // Reduce left margin to save space
-              bottom: 5,
+              right: isMobile ? 10 : 20,
+              left: isMobile ? 10 : 20,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
@@ -138,13 +141,13 @@ const EmotionVisualizer: React.FC<EmotionVisualizerProps> = ({
             
             <YAxis
               dataKey="emotionValue"
-              domain={[0, 11]}
+              domain={[0, 16]}
               tickFormatter={(value) => {
                 // Convert back to emotion names for y-axis labels
                 const emotions = Object.entries(emotionValueMap);
                 for (const [emotion, val] of emotions) {
                   if (val === value) {
-                    return emotion.slice(0, 3); // Show first 3 letters only
+                    return emotion; // Show all letters only
                   }
                 }
                 return '';
@@ -170,12 +173,14 @@ const EmotionVisualizer: React.FC<EmotionVisualizerProps> = ({
               type="monotone"
               dataKey="emotionValue"
               stroke={lineColor}
-              strokeWidth={2}
-              dot={{ stroke: lineColor, strokeWidth: 1, r: 2, fill: '#fff' }}
-              activeDot={{ r: 6 }}
-              animationDuration={500}
+              strokeWidth={2.5}  // Slightly thicker for better visibility
+              dot={{ stroke: lineColor, strokeWidth: 1.5, r: 3, fill: '#fff' }}
+              activeDot={{ r: 7, strokeWidth: 2, fill: lineColor }}
+              animationDuration={800}  // Smoother animation
               isAnimationActive={animationActive}
+              animationEasing="ease-in-out"  // Smoother easing
             />
+
           </LineChart>
         </ChartContainer>
       </div>
