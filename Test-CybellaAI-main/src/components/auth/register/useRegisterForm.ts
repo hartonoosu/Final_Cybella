@@ -19,7 +19,6 @@ export const useRegisterForm = () => {
       confirmPassword: "",
       gender: "",
       dateOfBirth: "",
-      ageRange: "",
       aiName: "Cybella",
       acceptTerms: false,
     },
@@ -37,20 +36,19 @@ export const useRegisterForm = () => {
         values.password,
         values.gender,
         values.dateOfBirth,
-        values.ageRange,
         values.aiName
       );
       
       if (success) {
         toast.dismiss();
-        toast.success("Account created successfully!");
+        toast.success("Account created successfully!", {duration: 2000});
         // Navigate to login page on successful registration
         navigate("/login");
       }
     } catch (error) {
       console.error("Registration error:", error);
       toast.dismiss();
-      toast.error("An unexpected error occurred");
+      toast.error("An unexpected error occurred",{duration: 2000});
     }
   };
 

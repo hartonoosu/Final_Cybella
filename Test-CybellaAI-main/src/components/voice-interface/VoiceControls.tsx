@@ -85,17 +85,29 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-
-        <div className="absolute left-5 ml-2 text-xs font-medium text-muted-foreground flex items-center space-x-1">
-          {/* <span>AI VOICE:</span> */}
-          <select
-            value={voiceGender}
-            onChange={(e) => setVoiceGender(e.target.value as "male" | "female")}
-            className="border border-purple-500 bg-purple-100 text-black text-xs rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-purple-400"
-          >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
+        <div className="ml-2 text-xs font-medium text-muted-foreground">
+          <div className="inline-flex items-center justify-center bg-muted rounded-md p-1 space-x-1 border border-purple-400">
+            <button
+              onClick={() => setVoiceGender("male")}
+              className={`px-3 py-1 text-sm rounded-md font-medium transition-all ${
+                voiceGender === "male"
+                  ? "bg-purple-600 text-white"
+                  : "bg-transparent text-purple-600 hover:bg-purple-200"
+              }`}
+            >
+              Male
+            </button>
+            <button
+              onClick={() => setVoiceGender("female")}
+              className={`px-3 py-1 text-sm rounded-md font-medium transition-all ${
+                voiceGender === "female"
+                  ? "bg-purple-600 text-white"
+                  : "bg-transparent text-purple-600 hover:bg-purple-200"
+              }`}
+            >
+              Female
+            </button>
+          </div>
         </div>
 
         <Button 

@@ -67,7 +67,6 @@ const EmotionDistribution: React.FC<EmotionDistributionProps> = ({
       return (
         <div className="bg-white p-2 border shadow-md rounded-md">
           <p className="font-medium">{`${payload[0].name}`}</p>
-          {/* <p>{`Count: ${payload[0].value}`}</p> */}
           <p>{`${payload[0].payload.percentage}%`}</p>
         </div>
       );

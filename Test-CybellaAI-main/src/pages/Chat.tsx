@@ -160,7 +160,7 @@ const Chat = () => {
               className="text-white hover:bg-white/20 h-6 px-1.5 py-0.5 text-xs md:h-10 md:px-4 md:py-2 md:text-base"
             >
               <ArrowLeft className="mr-1 md:mr-2 h-3 w-3 md:h-5 md:w-5" />
-              Back
+              Back to Home
             </Button>
             
             <div className="flex items-center gap-2">
@@ -200,12 +200,12 @@ const Chat = () => {
               {!isMobile && null /* Empty spacer for desktop layout */}
             </div>
             <div className={`space-y-2 md:space-y-6 ${isMobile ? 'order-first' : ''}`}>
-              {/* <FacialRecognition
+              <FacialRecognition
                 onEmotionDetected={handleFaceEmotionDetected}
                 isActive={sessionActive}
                 connectionIssue={!isOnline || connectionQuality === 'poor'}
                 key={`face-${sessionCount}`}
-              /> */}
+              /> 
               
               {/* Compact emotion info box for mobile */}
               {isMobile && sessionActive && (

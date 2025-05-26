@@ -56,7 +56,8 @@ const FacialRecognitionInner: React.FC<FacialRecognitionProps> = ({
               ? "Facial Recognition Ready - Emotion detection optimized for mobile device." 
               : "Facial Recognition Ready - Emotion detection is ready.",
             user?.id,
-            "success"
+            "success",
+            "toast"
           );
           toastShownRef.current = true;
         }

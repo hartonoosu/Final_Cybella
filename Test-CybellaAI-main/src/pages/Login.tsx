@@ -54,7 +54,7 @@ const Login = () => {
       
       if (success) {
         toast.dismiss();
-        toast.success("Login successful!");
+        toast.success("Login successful!",{duration: 750});
         navigate("/");
       }
     } catch (error) {

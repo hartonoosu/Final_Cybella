@@ -10,13 +10,15 @@ export interface ToastProps {
   description?: React.ReactNode;
   variant?: ToastVariants;
   action?: ToastActionElement;
+  duration?: number;
 }
 
-export const toast = ({ title, description, variant, action }: ToastProps) => {
+export const toast = ({ title, description, variant, action, duration }: ToastProps) => {
   sonnerToast(title as string, {
     description,
     action,
     className: variant,
+    duration: duration ?? 2000,
   });
 };
 
