@@ -21,6 +21,7 @@ export function useSpeechRecognition({
 
      const debounceTimer = useRef<NodeJS.Timeout | null>(null);
      const forceStopRef = useRef(false);
+     const persistentTranscriptRef = useRef('');
 
   useEffect(() => {
     if (!speechRecognitionSupported) {
@@ -42,15 +43,18 @@ export function useSpeechRecognition({
 
     speechRecognition.onResult((transcript, isFinal) => {
       if (isFinal) {
+        persistentTranscriptRef.current += (persistentTranscriptRef.current ? ' ' : '') + transcript;
+
         if (sttHoldTimeout) clearTimeout(sttHoldTimeout);
 
         // Hold for 1.5s in case user speaks again
         sttHoldTimeout = setTimeout(() => {
-          setTranscription(transcript);
+          const finalOutput = persistentTranscriptRef.current.trim();
+          setTranscription(finalOutput);
           setInterimTranscript("");
 
           if (onTranscriptionComplete) {
-            onTranscriptionComplete(transcript);
+            onTranscriptionComplete(finalOutput);
           }
 
           if (forceStopRef.current) {
@@ -91,7 +95,8 @@ speechRecognition.onEnd(() => {
   
   const startListening = async () => {
     if (!sessionActive || !speechRecognitionSupported) return;
-    
+    persistentTranscriptRef.current = '';
+
     try {
       forceStopRef.current = false;
       await speechRecognition.start();
