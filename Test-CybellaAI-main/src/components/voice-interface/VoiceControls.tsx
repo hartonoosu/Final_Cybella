@@ -106,56 +106,37 @@ const VoiceControls: React.FC<VoiceControlsProps> = ({
           disabled={!sessionActive || processingInput || connectionIssue}
           aria-label={isListening ? "Stop listening" : "Start listening"}
           onClick={async () => {
-            toggleListening(); // IMMEDIATELY reflect UI change (mic turns red, visualizer starts)
-          
-            if (!isListening) {
-              const {blob, duration} = await recordVoice();
-              // Check for too short before calling backend
-              // if (blob.size < 70000) {
-              //   console.warn("Frontend check: Voice input too short — skipping backend prediction");
-              //   stopListening(); 
-              //   await generateAIResponse("too short");
-              //   setVoiceEmotion("too short", 0, []);
-              //   return;
-              // }
-
-              // Check for too short (under 2 seconds) before calling backend
-              if (duration < 4000 || blob.size < 75000) {
-                console.warn("Frontend check: Voice input too short — skipping backend prediction");
-                stopListening(); 
-                await generateAIResponse("too short");
-                setVoiceEmotion("too short", 0, []);
-                return;
-              }
-
-              // Check for too soft
-              if (blob.size < 80000) {
-                console.warn("Too soft — skipping backend prediction");
-                stopListening();
-                await generateAIResponse("too soft");
-                setVoiceEmotion("too soft", 0, []);
-                return;
-              }
-
-              forceStopRef.current = true;
-
-          
-              // Download voice blob (optional)
-              // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-              // const url = URL.createObjectURL(blob);
-              // const a = document.createElement("a");
-              // a.href = url;
-              // a.download = `my_voice_${timestamp}.webm`;
-              // a.style.display = "none";
-              // document.body.appendChild(a);
-              // a.click();
-              // document.body.removeChild(a);
-              // console.log("Voice downloaded (once)");
-          
-              stopListening(); // ← force stop speech-to-text once backend recording finishes
-              await detectVoiceEmotion(blob); // Trigger emotion prediction
+            if (isListening) {
+              console.log(" Manual stop triggered from mic button");
+              window.manualStop = true;
+              document.getElementById("force-stop-recording")?.click();
+              return;
             }
-          }}      
+
+            toggleListening(); // Immediately reflect UI change (mic turns red)
+
+            const { blob, duration } = await recordVoice();
+
+            if (duration < 4000 || blob.size < 75000) {
+              console.warn("Frontend check: Voice input too short — skipping backend prediction");
+              stopListening();
+              await generateAIResponse("too short");
+              setVoiceEmotion("too short", 0, []);
+              return;
+            }
+
+            if (blob.size < 80000) {
+              console.warn("Too soft — skipping backend prediction");
+              stopListening();
+              await generateAIResponse("too soft");
+              setVoiceEmotion("too soft", 0, []);
+              return;
+            }
+
+            forceStopRef.current = true;
+            stopListening();
+            await detectVoiceEmotion(blob);
+          }}
         >
           {isListening ? 
             <MicOff size={isMobile ? 14 : 20} /> : 
