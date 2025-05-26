@@ -39,7 +39,7 @@ export const profileService = {
       // If the endpoint exists or we couldn't simulate, attempt the real request
       const response = await axios.post(`${API_URL}/update-profile`, {
         userId,
-        ...updates
+        updates
       });
       
       const data = response.data;

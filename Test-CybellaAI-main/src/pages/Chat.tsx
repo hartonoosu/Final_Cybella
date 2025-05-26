@@ -25,6 +25,7 @@ const Chat = () => {
   const [sessionCount, setSessionCount] = React.useState<number>(0);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isLoading, setIsLoading] = useState(false);
+  const [voiceGender, setVoiceGender] = useState<"male" | "female">("male");
   const isMobile = useIsMobile();
   const { isOnline, connectionQuality } = useNetworkStatus();
   const navigate = useNavigate();
@@ -193,6 +194,8 @@ const Chat = () => {
                 sessionActive={sessionActive}
                 key={`voice-${sessionCount}`}
                 onVoiceLoadingChange={setIsLoading}
+                voiceGender={voiceGender}
+                setVoiceGender={setVoiceGender}
               />
               {!isMobile && null /* Empty spacer for desktop layout */}
             </div>

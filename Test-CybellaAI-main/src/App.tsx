@@ -15,6 +15,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile"
 import Dashboard from "./pages/Dashboard";
+// Import global context for storing voice emotion segments
+import { VoiceEmotionProvider } from "./contexts/VoiceEmotionContext";
 
 // Create a client for React Query
 const queryClient = new QueryClient();
@@ -35,30 +37,38 @@ const App = () => (
     <UserPreferencesProvider>
       <BrowserRouter basename="/Test-CybellaAI/">
         <AuthProvider>
-          <TooltipProvider>
-            <ToastProvider />
-            <SonnerToaster />
-            <AlertProvider/>
-            <ConnectivityWarning />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/chat" element={
-                <ProtectedRoute>
-                  <Chat />
-                </ProtectedRoute>
-              } />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </TooltipProvider>
+          <VoiceEmotionProvider>
+            <TooltipProvider>
+              <ToastProvider />
+              <SonnerToaster />
+              <AlertProvider />
+              <ConnectivityWarning />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route
+                  path="/chat"
+                  element={
+                    <ProtectedRoute>
+                      <Chat />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TooltipProvider>
+          </VoiceEmotionProvider>
         </AuthProvider>
       </BrowserRouter>
     </UserPreferencesProvider>
