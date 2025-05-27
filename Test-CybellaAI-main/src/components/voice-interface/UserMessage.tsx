@@ -1,10 +1,10 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-// Trigger words for Beyond Blue
+// Trigger words for Beyond Blue (link to be adjusted)
 const LEVEL_1_TRIGGERS = ["anxious", "depressed", "overwhelmed", "hopeless", "sad", "stressed", "too much", "scared"];
 
-// Trigger words for Lifeline
+// Trigger words for Lifeline (link to be adjusted)
 const LEVEL_2_TRIGGERS = ["suicide", "want to die", "wanna die", "kill myself", "end it", "can't go on", "don't want to live", "don't wanna live", "don't wanna leave", "don't want to leave"];
 
 interface UserMessageProps {
@@ -14,8 +14,11 @@ interface UserMessageProps {
 const getSupportInfo = (text: string): "beyondblue" | "lifeline" | null => {
   const lower = text.toLowerCase();
 
-  if (LEVEL_2_TRIGGERS.some((word) => lower.includes(word))) return "lifeline";
-  if (LEVEL_1_TRIGGERS.some((word) => lower.includes(word))) return "beyondblue";
+  const level1Count = LEVEL_1_TRIGGERS.filter((word) => lower.includes(word)).length;
+  const level2Count = LEVEL_2_TRIGGERS.filter((word) => lower.includes(word)).length;
+
+  if (level2Count >= 1) return "lifeline"; // any lifeline trigger = show lifeline
+  if (level1Count >= 2) return "beyondblue"; // at least 2 beyond blue triggers
 
   return null;
 };
@@ -43,20 +46,20 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
           <br />
           You can also talk to someone at:<br />
           <a
-            href="https://www.beyondblue.org.au/"
+            href="https://www.example.org.au/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-700 font-semibold text-base underline mt-1 inline-block"
           >
-            www.beyondblue.org.au
+            www.example.org.au
           </a>
           <div className="mt-1 text-sm">
             or call{" "}
             <a
-              href="tel:1300224636"
+              // href="tel:1300224636"
               className="text-blue-700 font-semibold text-base underline"
             >
-              1300 22 4636
+              1300 22 xxxx
             </a>
           </div>
         </div>
@@ -68,20 +71,20 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
         <br />
         If you're in crisis, please talk to someone right now:<br />
         <a
-          href="https://www.lifeline.org.au/"
+          href="https://www.example.org.au/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-700 font-semibold text-base underline mt-1 inline-block"
         >
-          www.lifeline.org.au
+          www.example.org.au
         </a>
         <div className="mt-1 text-sm">
           or call{" "}
           <a
-            href="tel:131114"
+            // href="tel:131114"
             className="text-blue-700 font-semibold text-base underline"
           >
-            13 11 14
+            13 xx xx
           </a>
         </div>
       </div>
