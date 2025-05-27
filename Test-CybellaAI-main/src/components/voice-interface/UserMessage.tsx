@@ -43,20 +43,20 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
           <br />
           You can also talk to someone at:<br />
           <a
-            href="https://www.beyondblue.org.au/"
+            // href="https://www.beyondblue.org.au/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-700 font-semibold text-base underline mt-1 inline-block"
           >
-            www.beyondblue.org.au
+            www.b*y*ndblue.org.au
           </a>
           <div className="mt-1 text-sm">
             or call{" "}
             <a
-              href="tel:1300224636"
+              // href="tel:1300224636"
               className="text-blue-700 font-semibold text-base underline"
             >
-              1300 22 4636
+              1300 22 xxxx
             </a>
           </div>
         </div>
@@ -68,20 +68,20 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
         <br />
         If you're in crisis, please talk to someone right now:<br />
         <a
-          href="https://www.lifeline.org.au/"
+          // href="https://www.lifeline.org.au/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-700 font-semibold text-base underline mt-1 inline-block"
         >
-          www.lifeline.org.au
+          www.l*f*line.org.au
         </a>
         <div className="mt-1 text-sm">
           or call{" "}
           <a
-            href="tel:131114"
+            // href="tel:131114"
             className="text-blue-700 font-semibold text-base underline"
           >
-            13 11 14
+            13 xx xx
           </a>
         </div>
       </div>
