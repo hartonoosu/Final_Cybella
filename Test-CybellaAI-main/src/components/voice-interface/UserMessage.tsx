@@ -1,10 +1,10 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-// Trigger words for Beyond Blue
+// Trigger words for Beyond Blue (link to be adjusted)
 const LEVEL_1_TRIGGERS = ["anxious", "depressed", "overwhelmed", "hopeless", "sad", "stressed", "too much", "scared"];
 
-// Trigger words for Lifeline
+// Trigger words for Lifeline (link to be adjusted)
 const LEVEL_2_TRIGGERS = ["suicide", "want to die", "wanna die", "kill myself", "end it", "can't go on", "don't want to live", "don't wanna live", "don't wanna leave", "don't want to leave"];
 
 interface UserMessageProps {
@@ -46,12 +46,12 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
           <br />
           You can also talk to someone at:<br />
           <a
-            // href="https://www.beyondblue.org.au/"
+            href="https://www.example.org.au/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-700 font-semibold text-base underline mt-1 inline-block"
           >
-            www.b*y*ndblue.org.au
+            www.example.org.au
           </a>
           <div className="mt-1 text-sm">
             or call{" "}
@@ -71,12 +71,12 @@ const UserMessage: React.FC<UserMessageProps> = ({ text }) => {
         <br />
         If you're in crisis, please talk to someone right now:<br />
         <a
-          // href="https://www.lifeline.org.au/"
+          href="https://www.example.org.au/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-700 font-semibold text-base underline mt-1 inline-block"
         >
-          www.l*f*line.org.au
+          www.example.org.au
         </a>
         <div className="mt-1 text-sm">
           or call{" "}
