@@ -126,15 +126,15 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
       console.log("Recording stopped at:", stopTime.toLocaleTimeString(), "| Final blob size:", blob.size);
 
       // Download for debug
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "recorded_voice_debug.webm";
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      console.log("Voice downloaded for debug.");
+      // const url = URL.createObjectURL(blob);
+      // const a = document.createElement("a");
+      // a.href = url;
+      // a.download = "recorded_voice_debug.webm";
+      // a.style.display = "none";
+      // document.body.appendChild(a);
+      // a.click();
+      // document.body.removeChild(a);
+      // console.log("Voice downloaded for debug.");
 
       analyser.disconnect();
       source.disconnect();
