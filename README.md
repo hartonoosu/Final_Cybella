@@ -2,14 +2,6 @@
 
 Please follow the `README.md` inside the `speech-emotion-detection` directory for the full installation instruction.
 
-### Directory Structure
-
-#### Frontend Directory
-- `Test-CybellaAI-main`
-
-#### Backend Directory
-- `speech-emotion-detection`
-
 ## Steps to Run the Backend
 
 1. Open backend directory in the terminal:
