@@ -31,11 +31,11 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
     <header className={headerBgClass}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left Section - Custom Logo */}
-        <div className="flex items-center space-x-2 flex-shrink-0">
+        <div className="flex items-center space-x-1 flex-shrink-0">
           <img
             src="./image/logo.png"
             alt="Cybella.AI Logo"
-            className="h-12 w-auto" 
+            className="h-16 w-16 rounded-full"
           />
           <span className="text-white font-semibold text-lg">Cybella.AI</span>
         </div>
