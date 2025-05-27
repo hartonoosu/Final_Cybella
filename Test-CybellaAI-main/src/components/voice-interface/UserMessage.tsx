@@ -14,8 +14,11 @@ interface UserMessageProps {
 const getSupportInfo = (text: string): "beyondblue" | "lifeline" | null => {
   const lower = text.toLowerCase();
 
-  if (LEVEL_2_TRIGGERS.some((word) => lower.includes(word))) return "lifeline";
-  if (LEVEL_1_TRIGGERS.some((word) => lower.includes(word))) return "beyondblue";
+  const level1Count = LEVEL_1_TRIGGERS.filter((word) => lower.includes(word)).length;
+  const level2Count = LEVEL_2_TRIGGERS.filter((word) => lower.includes(word)).length;
+
+  if (level2Count >= 1) return "lifeline"; // any lifeline trigger = show lifeline
+  if (level1Count >= 2) return "beyondblue"; // at least 2 beyond blue triggers
 
   return null;
 };
