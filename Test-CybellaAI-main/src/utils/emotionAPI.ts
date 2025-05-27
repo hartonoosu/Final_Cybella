@@ -18,29 +18,6 @@ export async function getRealVoiceEmotion(
     const data = await response.json();
     console.log("Backend response:", data);
 
-    // // Try downloading cleaned file with retries
-    // let retries = 3;
-    // let downloaded = false;
-
-    // while (retries-- > 0 && !downloaded) {
-    //   await new Promise((r) => setTimeout(r, 500)); // wait before each try
-
-    //   try {
-    //     const testResp = await fetch("http://localhost:8000/static/download_cleaned.wav");
-    //     if (testResp.ok) {
-    //       const a = document.createElement("a");
-    //       a.href = "http://localhost:8000/static/download_cleaned.wav";
-    //       a.download = "cleaned_voice.wav";
-    //       a.click();
-    //       downloaded = true;
-    //     } else {
-    //       console.warn("Cleaned file not ready, retrying...");
-    //     }
-    //   } catch (e) {
-    //     console.warn("Error during retry:", e);
-    //   }
-    // }
-
     return {
       emotion: data.emotion,
       confidence: Number(data.confidence),

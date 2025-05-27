@@ -90,17 +90,6 @@ const NotificationBell = () => {
       setHasUnread(userNotifications.some(notification => !notification.read));
     });
     
-    // Add welcome notification if user is logged in
-    // if (user) {
-    //   const welcomeNotification = {
-    //     message: `Welcome back, ${user.name || user.email}!`,
-    //     type: 'info' as const,
-    //     read: false,
-    //     userId: user.id // Associate notification with user
-    //   };
-    //   notificationStore.addNotification(welcomeNotification);
-    // }
-    
     return unsubscribe;
   }, [user]);
   

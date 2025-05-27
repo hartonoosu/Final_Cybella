@@ -11,7 +11,6 @@ const connectToDatabase = async () => {
   });
 };
 
-// ✅ User schema updated with ageRange and aiName
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -64,7 +63,7 @@ exports.handler = async (event) => {
     await newUser.save();
 
     return {
-      statusCode: 200, // ✅ change from 201 to 200
+      statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         success: true,
@@ -84,7 +83,7 @@ exports.handler = async (event) => {
     console.error('Registration error:', error);
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },  // ✅ Added
+      headers: { "Content-Type": "application/json" },  
       body: JSON.stringify({ message: 'Server error during registration' })
     };
   }

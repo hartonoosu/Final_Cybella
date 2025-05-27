@@ -1,56 +1,3 @@
-// exports.handler = async function (event, context) {
-//   const { userId, currentPassword, newPassword } = JSON.parse(event.body || "{}");
-
-//   if (!userId || !currentPassword || !newPassword) {
-//     return {
-//       statusCode: 400,
-//       body: JSON.stringify({ success: false, message: "Missing required fields." }),
-//     };
-//   }
-
-//   // TODO: Add logic to verify `currentPassword` and update to `newPassword` in your DB
-//   console.log(`🔐 Password change requested for user ${userId}`);
-
-//   // Simulated success response (replace this with real DB update logic)
-//   return {
-//     statusCode: 200,
-//     body: JSON.stringify({
-//       success: true,
-//       message: "Password changed successfully.",
-//     }),
-//   };
-// };
-
-
-// exports.handler = async function (event) {
-//   if (event.httpMethod === "OPTIONS") {
-//     return {
-//       statusCode: 200,
-//       headers: {
-//         "Access-Control-Allow-Origin": "*",
-//         "Access-Control-Allow-Headers": "Content-Type",
-//         "Access-Control-Allow-Methods": "POST, OPTIONS",
-//       },
-//       body: "OK",
-//     };
-//   }
-
-//   if (event.httpMethod !== "POST") {
-//     return {
-//       statusCode: 405,
-//       body: JSON.stringify({ message: "Method Not Allowed" }),
-//     };
-//   }
-
-//   // Your existing password change logic...
-//   return {
-//     statusCode: 200,
-//     headers: {
-//       "Access-Control-Allow-Origin": "*", // Or restrict to specific origin
-//     },
-//     body: JSON.stringify({ success: true, message: "Password changed" }),
-//   };
-// };
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -79,7 +26,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 exports.handler = async function (event) {
-  // ✅ CORS preflight support
+  // CORS preflight support
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,

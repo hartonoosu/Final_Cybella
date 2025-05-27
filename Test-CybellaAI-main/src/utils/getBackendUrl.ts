@@ -1,17 +1,3 @@
-// export const getBackendUrl = async (): Promise<string> => {
-//   try {
-//     const response = await fetch("https://api64.ipify.org?format=json");
-//     const data = await response.json();
-//     const ip = data.ip;
-//     console.log("Detected IP:", ip);
-    
-//     // If running locally, use localhost as the fallback
-//     return `http://${ip}:5000`;
-//   } catch (error) {
-//     console.error("Error detecting IP:", error);
-//     return "http://localhost:5000"; // Fallback to localhost
-//   }
-// };
 
 export const getBackendUrl = async (): Promise<string> => {
   try {

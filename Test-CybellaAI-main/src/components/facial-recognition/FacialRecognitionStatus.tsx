@@ -25,21 +25,6 @@ const FacialRecognitionStatus: React.FC<FacialRecognitionStatusProps> = ({
   onRequestCamera
 }) => {
    const { user } = useAuth();
-  
-  // Send notifications for status changes
-  // useEffect(() => {
-  //   if (isActive && user) {
-  //     if (error) {
-  //       sendFaceRecognitionNotification(`Camera Error: ${error}`, user.id, 'error');
-  //     } else if (connectionIssue) {
-  //       sendFaceRecognitionNotification("Connection Issues Detected - Facial recognition may be affected", user.id, 'warning');
-  //     } else if (!cameraRequested && isActive) {
-  //       sendFaceRecognitionNotification("Please enable camera access to use facial recognition", user.id, 'info');
-  //     } else if (!modelsLoaded && cameraRequested) {
-  //       sendFaceRecognitionNotification("Loading facial recognition models...", user.id, 'info');
-  //     }
-  //   }
-  // }, [error, connectionIssue, cameraRequested, modelsLoaded, isActive, user]);
 
   if (error) {
     return (

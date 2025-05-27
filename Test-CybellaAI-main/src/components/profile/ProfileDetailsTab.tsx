@@ -37,7 +37,7 @@ import { Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
-// ✅ Extend the schema to include ageRange and aiName
+// Extend the schema to include ageRange and aiName
 const profileSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Invalid email address").optional(),

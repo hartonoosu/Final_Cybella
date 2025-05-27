@@ -46,7 +46,7 @@ export function useSpeechRecognition({
         persistentTranscriptRef.current += (persistentTranscriptRef.current ? ' ' : '') + transcript;
         if (sttHoldTimeout) clearTimeout(sttHoldTimeout);
 
-        // Hold for 1.5s in case user speaks again
+        // Hold for 2s in case user speaks again
         sttHoldTimeout = setTimeout(() => {
           const finalOutput = persistentTranscriptRef.current.trim();
           setTranscription(finalOutput);
@@ -59,25 +59,17 @@ export function useSpeechRecognition({
           if (forceStopRef.current) {
             stopListening();
           }
-        }, 2000); // 1.5s hold to check if user continues
+        }, 2000); // 2s hold to check if user continues
       } else {
         if (sttHoldTimeout) clearTimeout(sttHoldTimeout); // cancel previous send
         setInterimTranscript(transcript);
       }
     });
 
-speechRecognition.onEnd(() => {
-  // Don't trigger anything immediately — wait for timeout logic
-  setIsListening(false);
-});
-
-
     speechRecognition.onEnd(() => {
-  // Don't trigger anything immediately — wait for timeout logic
-  setIsListening(false);
-});
-
-
+      // Don't trigger anything immediately — wait for timeout logic
+      setIsListening(false);
+    });
 
     speechRecognition.onEnd(() => {
       setIsListening(false);

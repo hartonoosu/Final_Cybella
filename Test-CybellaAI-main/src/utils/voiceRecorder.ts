@@ -50,7 +50,6 @@ export async function recordVoice(): Promise<{ blob: Blob; duration: number }> {
     if (!hasStopped && mediaRecorder.state === "recording") {
       const reason = window.manualStop ? "Manual Stop Button" : "Auto/AI/Silence";
       console.log(`Calling mediaRecorder.stop() — Reason: ${reason} — at`, new Date().toLocaleTimeString());
-      // console.log("Calling mediaRecorder.stop() at:", new Date().toLocaleTimeString());
       mediaRecorder.stop();
       clearInterval(volumeInterval);
       source.disconnect();
