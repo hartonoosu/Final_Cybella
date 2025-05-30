@@ -1,4 +1,4 @@
-
+// Unchanged imports
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Emotion } from '@/components/EmotionDisplay';
 import { useEmotionHistory } from './useEmotionHistory';
@@ -11,7 +11,7 @@ interface UseEmotionProcessingProps {
   lastProcessTimeRef: React.MutableRefObject<number>;
   processingInterval: number;
   onEmotionDetected?: (emotion: Emotion, confidence: number) => void;
-  sessionId?: string; // Add sessionId to track different sessions
+  sessionId?: string;
 }
 
 export function useEmotionProcessing({
@@ -24,23 +24,22 @@ export function useEmotionProcessing({
   onEmotionDetected,
   sessionId = ""
 }: UseEmotionProcessingProps) {
-  const [lastDetectedEmotion, setLastDetectedEmotion] = useState<{emotion: Emotion, confidence: number} | null>(null);
+  const [lastDetectedEmotion, setLastDetectedEmotion] = useState<{ emotion: Emotion; confidence: number } | null>(null);
   const animationFrameIdRef = useRef<number | null>(null);
   const mountedRef = useRef(true);
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { getStabilizedEmotion, resetHistory } = useEmotionHistory();
   const lastSuccessfulDetectionRef = useRef<number>(0);
-  const MAX_DETECTION_GAP_MS = 3000; // 3 seconds - for faster updates
+  const MAX_DETECTION_GAP_MS = 1000; // ✅ Reduced from 3000
   const consecutiveFailuresRef = useRef<number>(0);
-  const MAX_CONSECUTIVE_FAILURES = 2; // More aggressive failure detection
-  const confidenceThresholdRef = useRef<number>(0.35); // Lower threshold for better recall
+  const MAX_CONSECUTIVE_FAILURES = 2;
+  const confidenceThresholdRef = useRef<number>(0.30); // ✅ Lowered from 0.35
   const lastEmotionUpdateTime = useRef<number>(0);
   const lastEmotionOutputTime = useRef<number>(0);
-  const MIN_EMOTION_UPDATE_INTERVAL = 1500; // 1.5 seconds between internal updates
-  const MAX_EMOTION_OUTPUT_INTERVAL = 5000; // 5 seconds max between outputs
-  const lastSessionIdRef = useRef<string>(""); // Track session ID to reset history on change
+  const MIN_EMOTION_UPDATE_INTERVAL = 500; // ✅ Reduced from 1500
+  const MAX_EMOTION_OUTPUT_INTERVAL = 1500; // ✅ Reduced from 5000
+  const lastSessionIdRef = useRef<string>("");
 
-  // Clean up on unmount
   useEffect(() => {
     return () => {
       mountedRef.current = false;
@@ -55,7 +54,6 @@ export function useEmotionProcessing({
     };
   }, []);
 
-  // Reset history when session ID changes
   useEffect(() => {
     if (sessionId && sessionId !== lastSessionIdRef.current) {
       console.log("Session ID changed, resetting emotion history. New session:", sessionId);
@@ -65,100 +63,90 @@ export function useEmotionProcessing({
       lastEmotionOutputTime.current = 0;
       lastSuccessfulDetectionRef.current = 0;
       consecutiveFailuresRef.current = 0;
-      confidenceThresholdRef.current = 0.35;
+      confidenceThresholdRef.current = 0.30; // ✅ Match initial threshold
       lastSessionIdRef.current = sessionId;
     }
   }, [sessionId, resetHistory]);
 
-  // Process a frame of emotion detection
   const processFrame = useCallback(async (timestamp: number) => {
     if (!mountedRef.current) return;
-    
+
     if (isActive && permission && modelsLoaded) {
       const elapsed = timestamp - lastProcessTimeRef.current;
       const now = Date.now();
-      
-      // Process frequently to keep camera active
+
       if (elapsed >= processingInterval) {
         try {
-          // Set a timeout to prevent getting stuck in processing
           const detectionPromise = detectEmotion();
-          
-          // Setup a safety timeout to prevent getting stuck
+
           const timeoutPromise = new Promise<null>((resolve) => {
             processingTimeoutRef.current = setTimeout(() => {
               console.log("Emotion detection timed out, continuing...");
               resolve(null);
-            }, 800); // Reduced for faster processing
+            }, 800); // ✅ Keep this responsive
           });
-          
-          // Race between detection and timeout
+
           const result = await Promise.race([detectionPromise, timeoutPromise]);
-          
+
           if (processingTimeoutRef.current) {
             clearTimeout(processingTimeoutRef.current);
             processingTimeoutRef.current = null;
           }
-          
+
           if (result && mountedRef.current) {
             console.log("Got emotion detection result:", result);
             lastSuccessfulDetectionRef.current = now;
-            consecutiveFailuresRef.current = 0; // Reset failure counter on success
-            
+            consecutiveFailuresRef.current = 0;
+
             const stabilizedResult = getStabilizedEmotion(
-              result.emotion, 
-              result.confidence, 
+              result.emotion,
+              result.confidence,
               lastDetectedEmotion
             );
-            
-            console.log("Stabilized result:", stabilizedResult);
-            
+
             const timeSinceLastUpdate = now - lastEmotionUpdateTime.current;
             const timeSinceLastOutput = now - lastEmotionOutputTime.current;
-            
-            // Update internal state based on MIN_EMOTION_UPDATE_INTERVAL
-            const shouldUpdateInternal = 
-              !lastDetectedEmotion || 
-              (timeSinceLastUpdate >= MIN_EMOTION_UPDATE_INTERVAL && 
+
+            const shouldUpdateInternal =
+              !lastDetectedEmotion ||
+              (timeSinceLastUpdate >= MIN_EMOTION_UPDATE_INTERVAL &&
                 (stabilizedResult.confidence > confidenceThresholdRef.current ||
-                 (stabilizedResult.emotion !== lastDetectedEmotion.emotion && 
-                  stabilizedResult.confidence > 0.4)));
-            
-            // Force update if we haven't output an emotion in MAX_EMOTION_OUTPUT_INTERVAL (5 seconds)
+                  (stabilizedResult.emotion !== lastDetectedEmotion.emotion &&
+                    stabilizedResult.confidence > 0.4)));
+
             const shouldForceOutput = timeSinceLastOutput >= MAX_EMOTION_OUTPUT_INTERVAL;
-            
+
             if (shouldUpdateInternal || shouldForceOutput) {
-              console.log(`Updating emotion to: ${stabilizedResult.emotion} (${stabilizedResult.confidence.toFixed(2)})${shouldForceOutput ? " [FORCED UPDATE]" : ""}`);
+              console.log(
+                `Updating emotion to: ${stabilizedResult.emotion} (${stabilizedResult.confidence.toFixed(2)})${shouldForceOutput ? " [FORCED UPDATE]" : ""}`
+              );
               setLastDetectedEmotion(stabilizedResult);
               lastEmotionUpdateTime.current = now;
-              
+
               if (onEmotionDetected) {
                 onEmotionDetected(stabilizedResult.emotion, stabilizedResult.confidence);
                 lastEmotionOutputTime.current = now;
               }
             }
           } else {
-            // Increment failure counter
             consecutiveFailuresRef.current++;
-            
-            // Check if we've gone too long without a successful detection
-            if (now - lastSuccessfulDetectionRef.current > MAX_DETECTION_GAP_MS || 
-                consecutiveFailuresRef.current >= MAX_CONSECUTIVE_FAILURES) {
+
+            if (
+              now - lastSuccessfulDetectionRef.current > MAX_DETECTION_GAP_MS ||
+              consecutiveFailuresRef.current >= MAX_CONSECUTIVE_FAILURES
+            ) {
               console.log("No successful emotion detection for too long, resetting history");
               resetHistory();
               lastSuccessfulDetectionRef.current = now;
               consecutiveFailuresRef.current = 0;
-              
-              // Clear last detected emotion to allow for fresh detection
+
               if (lastDetectedEmotion) {
                 setLastDetectedEmotion(null);
               }
-              
-              // Lower confidence threshold to make it easier to get a new detection
-              confidenceThresholdRef.current = 0.3;
+
+              confidenceThresholdRef.current = 0.30; // ✅ Maintain lower threshold
             }
-            
-            // Force output if we haven't updated for too long
+
             if (lastDetectedEmotion && now - lastEmotionOutputTime.current >= MAX_EMOTION_OUTPUT_INTERVAL) {
               console.log("Forcing emotion output due to timeout");
               if (onEmotionDetected) {
@@ -167,7 +155,7 @@ export function useEmotionProcessing({
               }
             }
           }
-          
+
           lastProcessTimeRef.current = timestamp;
         } catch (err) {
           console.error("Error during emotion detection:", err);
@@ -175,26 +163,25 @@ export function useEmotionProcessing({
         }
       }
     }
-    
+
     if (mountedRef.current) {
       animationFrameIdRef.current = requestAnimationFrame(processFrame);
     }
   }, [isActive, permission, modelsLoaded, detectEmotion, lastProcessTimeRef, processingInterval, onEmotionDetected, getStabilizedEmotion, lastDetectedEmotion, resetHistory]);
 
-  // Start/stop the animation frame loop based on active state
   useEffect(() => {
     if (isActive && permission && modelsLoaded && mountedRef.current) {
       console.log("Starting emotion processing loop");
       resetHistory();
       lastSuccessfulDetectionRef.current = Date.now();
-      lastEmotionUpdateTime.current = 0; // Reset last update time to force first detection
-      lastEmotionOutputTime.current = 0; // Reset last output time to force first output
+      lastEmotionUpdateTime.current = 0;
+      lastEmotionOutputTime.current = 0;
       consecutiveFailuresRef.current = 0;
-      confidenceThresholdRef.current = 0.35; // Start with lower threshold for better recall
-      
+      confidenceThresholdRef.current = 0.30; // ✅ Match all locations
+
       animationFrameIdRef.current = requestAnimationFrame(processFrame);
     }
-    
+
     return () => {
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current);
