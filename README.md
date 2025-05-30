@@ -1,6 +1,6 @@
 # Final Version of CybellaAI
 
-# Frontend = Test-CybellaAI  (Face)
+# Frontend = CybellaAI  (Face)
 
 This is the **frontend** portion of the CybellaAI project, built using **React + Vite**. It interfaces with the backend for real-time emotion detection using facial and voice data.
 
