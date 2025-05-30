@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useEmotionData } from '@/hooks/dashboard/useEmotionData';
 import SessionHistoryList from '@/components/dashboard/SessionHistoryList';
 import EmotionSummary from '@/components/dashboard/EmotionSummary';
-import EmotionDistribution from '@/components/dashboard/EmotionDistribution';
-import EmotionBySource from '@/components/dashboard/EmotionBySource';
+import FaceEmotionDistribution from '@/components/dashboard/EmotionDistribution';
+import VoiceEmotion from '@/components/dashboard/EmotionBySource';
 //import voice emotion context
 import { useVoiceEmotionContext } from "@/contexts/VoiceEmotionContext";
 import { AlertCircle, Trash2, ArrowLeft } from 'lucide-react';
@@ -85,11 +85,17 @@ const Dashboard = () => {
             <div className="space-y-6">
               <EmotionSummary emotionData={emotionData} />
               <div className="grid md:grid-cols-2 gap-6">
-                <EmotionDistribution emotionData={emotionData} />
-                <div className="overflow-y-auto max-h-[500px]">
-                  <SessionHistoryList sessions={emotionData.sessions} />
-                </div>
+                <FaceEmotionDistribution emotionData={emotionData} />
+                <VoiceEmotion emotionData={emotionData} />
               </div>
+              <Card>
+                <div className="p-4 space-y-3">
+                  <h2 className="text-md font-semibold text-purple-900">Session History</h2>
+                  <div className="overflow-y-auto max-h-[500px]">
+                    <SessionHistoryList sessions={emotionData.sessions} />
+                  </div>
+                </div>
+              </Card>
               <Card className="p-4 bg-amber-50 border-amber-200">
                 <div className="flex">
                   <AlertCircle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0" />
@@ -125,5 +131,6 @@ const Dashboard = () => {
     </div>
   );
 };
+
 
 export default Dashboard;
