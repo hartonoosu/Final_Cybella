@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { useEmotionData } from '@/hooks/dashboard/useEmotionData';
 import SessionHistoryList from '@/components/dashboard/SessionHistoryList';
 import EmotionSummary from '@/components/dashboard/EmotionSummary';
-import FaceEmotionDistribution from '@/components/dashboard/EmotionDistribution';
-import VoiceEmotion from '@/components/dashboard/EmotionBySource';
+import FaceEmotionDistribution from '@/components/dashboard/FaceEmotionDistribution';
+import VoiceEmotion from '@/components/dashboard/VoiceEmotionDistribution';
 //import voice emotion context
 import { useVoiceEmotionContext } from "@/contexts/VoiceEmotionContext";
 import { AlertCircle, Trash2, ArrowLeft } from 'lucide-react';
