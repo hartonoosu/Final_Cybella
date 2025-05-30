@@ -59,7 +59,7 @@ const EmotionSummary: React.FC<EmotionSummaryProps> = ({ emotionData }) => {
           <BarChart className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalEmotionsDetected}</div>
+          <div className="text-2xl font-bold"> 8 </div>
           <p className="text-xs text-muted-foreground">
             Distinct emotions detected across all sessions
           </p>
