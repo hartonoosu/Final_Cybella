@@ -61,8 +61,8 @@ Please follow the `README.md` inside the `speech-emotion-detection` directory fo
 
     ```
     Multiple possible dev commands found 
-    ❯ [Next.js] 'npm run dev' 
-      [Vite] 'npm run dev' 
+      [Next.js] 'npm run dev' 
+    ❯ [Vite] 'npm run dev' 
     ```
 
 5. Use the arrow key to select:
