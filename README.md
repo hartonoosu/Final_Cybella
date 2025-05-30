@@ -22,6 +22,8 @@ Ensure you have the following installed:
 * **Node.js (v20)**
 * **npm (Node Package Manager)**
 
+### On Windows: 
+
 Download Node.js from: [https://nodejs.org/en/download](https://nodejs.org/en/download)
 
 After installation, verify in your terminal:
@@ -42,16 +44,47 @@ If the terminal does not recognize these commands, add Node.js to your system pa
 C:\Program Files\nodejs\
 ```
 
+### On macOS:
+You can install Node.js using [Homebrew](https://brew.sh/), a popular package manager, by pasting this command:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then install Node.js (includes npm):
+
+```bash
+brew install node
+```
+
+For Apple Silicon (M1/M2/M3) users, if you run into issues, try this instead:
+```bash
+arch -x86_64 brew install node
+```
+
+After installation, verify that Node.js and npm are installed:
+
+```bash
+node -v
+npm -v
+```
+
 ---
 
 ## Install Netlify CLI
 
 Netlify CLI is required to serve the frontend locally using the Vite dev server.
 
-Install it globally:
+Install it globally (on Windows)
 
 ```bash
 npm install -g netlify-cli
+```
+
+Install it globally (on macOS)
+
+```bash
+sudo npm install -g netlify-cli
 ```
 
 Verify the installation:
@@ -73,7 +106,7 @@ cd Test-CybellaAI-main
 2. Start the Netlify development server:
 
 ```bash
-npx netlify dev
+netlify dev
 ```
 
 3. When prompted, select:
@@ -100,11 +133,11 @@ Please follow the `README.md` inside the `speech-emotion-detection` directory fo
 
 2. Activate the virtual environment:
 
-    - For macOS:
+    - On macOS:
         ```bash
         source venv311/bin/activate
         ```
-    - For Windows:
+    - On Windows:
         ```bash
         .\venv311\Scripts\activate
         ```
@@ -127,5 +160,5 @@ Please follow the `README.md` inside the `speech-emotion-detection` directory fo
 
     Then the backend is successfully running.
 
-5. For macOS: if port 5000 is already being used, turn off AirPlay from the macbook settings
+5. On macOS: if port 5000 is already being used, try turning off AirPlay from the macbook settings
 
