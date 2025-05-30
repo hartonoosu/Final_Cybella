@@ -61,7 +61,7 @@ const EmotionSummary: React.FC<EmotionSummaryProps> = ({ emotionData }) => {
         <CardContent>
           <div className="text-2xl font-bold"> 8 </div>
           <p className="text-xs text-muted-foreground">
-            Distinct emotions detected across all sessions
+            Cybella gently detects 8 emotions through voice and facial cues.
           </p>
         </CardContent>
       </Card>
