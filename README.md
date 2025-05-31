@@ -71,6 +71,18 @@ npm -v
 
 ---
 
+## Install npm modules
+
+To serve the frontend locally using the Vite development server, ensure that all required npm modules are installed.
+
+```bash
+npm install
+```
+
+---
+
+---
+
 ## Install Netlify CLI
 
 Netlify CLI is required to serve the frontend locally using the Vite dev server.
@@ -106,7 +118,7 @@ cd Frontend-CybellaAI
 2. Start the Netlify development server:
 
 ```bash
-netlify dev
+npx netlify dev
 ```
 
 3. When prompted, select:
