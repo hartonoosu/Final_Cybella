@@ -20,6 +20,18 @@ interface UseSpeechSynthesisReturn {
   handleVolumeChange: (value: number) => void;
 }
 
+// Waits for speech synthesis voices to be loaded before returning them
+function waitForVoices(): Promise<SpeechSynthesisVoice[]> {
+  return new Promise((resolve) => {
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) return resolve(voices);
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      resolve(window.speechSynthesis.getVoices());
+    };
+  });
+}
+
 // Speech Synthesis Hook
 export function useSpeechSynthesis({ 
   text, 
@@ -58,71 +70,60 @@ export function useSpeechSynthesis({
     }
   }, [text, autoplay, isMuted]);
   
-  const handlePlay = () => {
-    if (!text || isMuted) return;
-    
-    // Force stop backend mic if it's still recording
-    const stopBtn = document.getElementById("force-stop-recording");
-    if (stopBtn) {
-      console.log("AI voice about to speak — forcing backend mic to stop");
-      stopBtn.click();
-    }
+  const handlePlay = async () => {
+  if (!text || isMuted) return;
 
-    // Stop any current speech
-    window.speechSynthesis.cancel();
+  // Force stop backend mic if it's still recording
+  const stopBtn = document.getElementById("force-stop-recording");
+  if (stopBtn) {
+    console.log("AI voice about to speak — forcing backend mic to stop");
+    stopBtn.click();
+  }
 
-    // Get the appropriate language voice
-    const voiceLanguage = languageVoiceMap[language] || 'en-US';
-    
-    // Create and configure a new utterance
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.volume = volume;
-    utterance.rate = 1.1;
-    speechRef.current = utterance;
-    utterance.volume = isMuted ? 0 : volume;
-    utterance.lang = voiceLanguage;
+  // Stop any current speech
+  window.speechSynthesis.cancel();
 
-    const voices = window.speechSynthesis.getVoices();
+  const voiceLanguage = languageVoiceMap[language] || "en-US";
+  const voices = await waitForVoices();
 
-    // Try to find a matching voice for English
-    const preferredVoices = voiceGender === "male"
-  ? ["Google UK English Male", "Daniel (English (United Kingdom))"]
-  : ["Google UK English Female", "Samantha", "Karen", "Catherine"];
+  const preferredVoices = voiceGender === "male"
+    ? ["Daniel", "Alex",]
+    : ["Karen", "Samantha", "Tessa"];
 
-    const matchingVoice =voices.find(v => preferredVoices.includes(v.name))||voices.find(v => v.lang.startsWith(voiceLanguage));
+  const matchingVoice =
+    voices.find((v) => preferredVoices.includes(v.name)) ||
+    voices.find((v) => v.lang.startsWith(voiceLanguage));
 
-    // If voices are not yet loaded (or no match found), wait and retry
-    if (!matchingVoice && typeof window !== "undefined") {
-      window.speechSynthesis.onvoiceschanged = () => {
-        const loadedVoices = window.speechSynthesis.getVoices();
-        const fallbackVoice = loadedVoices.find(v => preferredVoices.includes(v.name)) 
-                          || loadedVoices.find(v => v.lang.startsWith(voiceLanguage));
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.voice = matchingVoice || voices[0];
+  utterance.volume = isMuted ? 0 : volume;
+  utterance.lang = voiceLanguage;
 
-        if (fallbackVoice) {
-          utterance.voice = fallbackVoice;
-          utterance.rate = fallbackVoice.name === "Samantha" ? 1.05 : 1.18;
-          utterance.pitch = fallbackVoice.name === "Samantha" ? 0.7 : 1.2; 
+  // Pitch & rate adjustments
+  switch (utterance.voice.name) {
+    case "Samantha":
+      utterance.rate = 1.05;
+      utterance.pitch = 0.7;
+      break;
+    case "Karen":
+      utterance.rate = 1.07;
+      utterance.pitch = 1.1;
+      break;
+    default:
+      utterance.rate = 1.10;
+      utterance.pitch = 1.1;
+  }
 
-          window.speechSynthesis.speak(utterance);
-        }
-      };
-    } else {
-      utterance.voice = matchingVoice!;
-      utterance.rate = matchingVoice.name === "Samantha" ? 1.05 : 1.18;
-      utterance.pitch = matchingVoice.name === "Samantha" ? 0.7 : 1.2;;
+  console.log("Using voice:", utterance.voice.name, "| Lang:", utterance.voice.lang);
 
-      window.speechSynthesis.speak(utterance);
-    }
+  // Store and track state
+  utterance.onstart = () => setIsPlaying(true);
+  utterance.onend = () => setIsPlaying(false);
+  utterance.onerror = () => setIsPlaying(false);
 
-
-    // Set up event handlers
-    utterance.onstart = () => setIsPlaying(true);
-    utterance.onend = () => setIsPlaying(false);
-    utterance.onerror = () => setIsPlaying(false);
-    
-    // Store the utterance
-    speechRef.current = utterance;
-  };
+  speechRef.current = utterance;
+  window.speechSynthesis.speak(utterance);
+};
   
   const handleStop = () => {
     window.speechSynthesis.cancel();
