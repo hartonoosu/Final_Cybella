@@ -35,7 +35,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <UserPreferencesProvider>
-      <BrowserRouter basename="/Test-CybellaAI/">
+      <BrowserRouter basename="/Frontend-CybellaAI/">
         <AuthProvider>
           <VoiceEmotionProvider>
             <TooltipProvider>
