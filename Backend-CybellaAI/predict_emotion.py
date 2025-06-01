@@ -92,12 +92,22 @@ def predict_emotion_from_audio(path):
         embedding = extract_embedding(segment)
         scaled = scaler.transform([embedding])
         probs = model.predict(scaled)[0]
+
+        # DEBUG CHECK
+        print("🔎 Probabilities:", probs)
+        print("🔢 Output vector length:", len(probs))
+        print("🏷️ Label classes:", label_encoder.classes_)
+        print("🧮 Number of labels:", len(label_encoder.classes_))
+
         predictions.append(probs)
 
         # Print per segment result
-        pred_idx = np.argmax(probs)
-        pred_label = label_encoder.inverse_transform([pred_idx])[0]
+        pred_idx = int(np.argmax(probs))
         conf = float(round(probs[pred_idx], 4))
+        if pred_idx < len(label_encoder.classes_):
+            pred_label = label_encoder.inverse_transform([pred_idx])[0]
+        else:
+            pred_label = "unknown"
         print(f"⏱️ Segment {i} ({round(start/SAMPLE_RATE, 1)}-{round(end/SAMPLE_RATE, 1)}s): {pred_label} ({conf})")
 
     if len(predictions) == 0:
@@ -110,8 +120,12 @@ def predict_emotion_from_audio(path):
     if USE_AVERAGE:
         avg_probs = np.mean(predictions, axis=0)
         predicted_index = int(np.argmax(avg_probs))
-        predicted_label = label_encoder.inverse_transform([predicted_index])[0]
-        
+        if predicted_index < len(label_encoder.classes_):
+            predicted_label = label_encoder.inverse_transform([predicted_index])[0]
+        else:
+            # Some noise on the datasets, the closer tone to this so far is surprised voice
+            predicted_label = "surprised"
+
         # Normalize inconsistent labels
         if predicted_label.lower() == "fear":
             predicted_label = "fearful"
@@ -122,7 +136,12 @@ def predict_emotion_from_audio(path):
         max_conf_idx = np.argmax(np.max(predictions, axis=1))
         best_probs = predictions[max_conf_idx]
         predicted_index = int(np.argmax(best_probs))
-        predicted_label = label_encoder.inverse_transform([predicted_index])[0]
+        if predicted_index < len(label_encoder.classes_):
+            predicted_label = label_encoder.inverse_transform([predicted_index])[0]
+        else:
+            # Some noise on the datasets, the closer tone to this so far is surprised voice
+            predicted_label = "surprised"
+
         top3 = sorted(zip(best_probs, label_encoder.classes_), reverse=True)[:3]
         print("\n Top 3 (best segment only):", [(label, round(p, 2)) for p, label in top3])
 
@@ -133,8 +152,11 @@ def predict_emotion_from_audio(path):
     segment_results = []
     for i, probs in enumerate(predictions):
         pred_idx = int(np.argmax(probs))
-        pred_label = label_encoder.inverse_transform([pred_idx])[0]
         conf = float(round(probs[pred_idx], 4))
+        if pred_idx < len(label_encoder.classes_):
+            pred_label = label_encoder.inverse_transform([pred_idx])[0]
+        else:
+            pred_label = "unknown"
 
         if pred_label.lower() == "fear":
             pred_label = "fearful"
