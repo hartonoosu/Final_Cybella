@@ -121,7 +121,7 @@ This will launch the frontend at a local development URL (typically `http://loca
 
 # Backend = Speech Emotion Detection (Voice)
 
-Please follow the `README.md` inside the `speech-emotion-detection` directory for the full installation instruction.
+Please follow the `INSTALL_BACKEND.md` for the full installation instruction.
 
 ## Steps to Run the Backend
 
