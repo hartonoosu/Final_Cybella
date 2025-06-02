@@ -148,7 +148,7 @@ Please follow the `INSTALL_BACKEND.md` for the full installation instruction.
     uvicorn main:app --host 0.0.0.0 --port 5000 --reload
     ```
 
-    (Note: this may take longer on the first run)
+    (Note: this may take longer on the first run after installation)
 
 4. Once it shows:
 

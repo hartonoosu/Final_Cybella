@@ -136,6 +136,7 @@ async def predict(file: UploadFile = File(...)):
         time.sleep(0.5)
         for path in [file_path, wav_path, cleaned_path]:
             try:
+                path = Path(path)
                 if path.exists():
                     path.unlink()
             except Exception as e:

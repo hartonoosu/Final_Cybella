@@ -138,7 +138,7 @@ python3.11 -m venv venv311 (MacOS)
     ffmpeg -version
     ```
     If it print info, it’s working
-## 9. (For MacOS user only) Install the required root CA certificates that Python needs to verify SSL connections.
+## 9. (For macOS user only) Install the required root CA certificates that Python needs to verify SSL connections.
 - Paste on terminal:
     ```
     open /Applications/Python\ 3.11/Install\ Certificates.command

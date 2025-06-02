@@ -52,8 +52,8 @@ def predict_emotion_from_audio(path):
 
     volume = np.mean(np.abs(y))
     peak = np.max(np.abs(y))
-    print("🔊 Volume:", volume)
-    print("📈 Peak:", peak)
+    print(" Volume:", volume)
+    print(" Peak:", peak)
     if volume < VOLUME_THRESHOLD:
         return {"emotion": "too_soft", "confidence": 0.0}
     if peak < PEAK_THRESHOLD:
@@ -83,7 +83,7 @@ def predict_emotion_from_audio(path):
         total_segments = full_windows
 
     predictions = []
-    print("\n🧠 Segment-wise prediction:")
+    print("\n Segment-wise prediction:")
     for i in range(total_segments):
         start = i * WINDOW_LENGTH
         end = min(start + WINDOW_LENGTH, total_len)
@@ -93,12 +93,6 @@ def predict_emotion_from_audio(path):
         scaled = scaler.transform([embedding])
         probs = model.predict(scaled)[0]
 
-        # DEBUG CHECK
-        print("🔎 Probabilities:", probs)
-        print("🔢 Output vector length:", len(probs))
-        print("🏷️ Label classes:", label_encoder.classes_)
-        print("🧮 Number of labels:", len(label_encoder.classes_))
-
         predictions.append(probs)
 
         # Print per segment result
@@ -107,8 +101,8 @@ def predict_emotion_from_audio(path):
         if pred_idx < len(label_encoder.classes_):
             pred_label = label_encoder.inverse_transform([pred_idx])[0]
         else:
-            pred_label = "unknown"
-        print(f"⏱️ Segment {i} ({round(start/SAMPLE_RATE, 1)}-{round(end/SAMPLE_RATE, 1)}s): {pred_label} ({conf})")
+            pred_label = "surprised"
+        print(f"⏱ Segment {i} ({round(start/SAMPLE_RATE, 1)}-{round(end/SAMPLE_RATE, 1)}s): {pred_label} ({conf})")
 
     if len(predictions) == 0:
         return {"emotion": "too_short", "confidence": 0.0}
@@ -156,7 +150,7 @@ def predict_emotion_from_audio(path):
         if pred_idx < len(label_encoder.classes_):
             pred_label = label_encoder.inverse_transform([pred_idx])[0]
         else:
-            pred_label = "unknown"
+            pred_label = "surprised"
 
         if pred_label.lower() == "fear":
             pred_label = "fearful"
