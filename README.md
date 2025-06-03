@@ -1,6 +1,6 @@
 # Final Version of CybellaAI
 
-# Frontend = CybellaAI  (Face)
+# Frontend = CybellaAI  (Face Emotion Detection)
 
 This is the **frontend** portion of the CybellaAI project, built using **React + Vite**. It interfaces with the backend for real-time emotion detection using facial and voice data.
 
@@ -9,8 +9,8 @@ This is the **frontend** portion of the CybellaAI project, built using **React +
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/hartonoosu/Final-Cybella.git
-cd Final-Cybella
+git clone https://github.com/hartonoosu/Final_Cybella.git
+cd Final_Cybella
 ```
 
 ---
@@ -24,7 +24,7 @@ Ensure you have the following installed:
 
 ### On Windows: 
 
-Download Node.js from: [https://nodejs.org/en/download](https://nodejs.org/en/download)
+Download Node.js from: (https://nodejs.org/en/blog/release/v20.9.0 )
 
 After installation, verify in your terminal:
 
@@ -100,13 +100,13 @@ netlify --version
 1. Open your terminal and navigate to the project root:
 
 ```bash
-cd Test-CybellaAI-main
+cd Frontend-CybellaAI
 ```
 
 2. Start the Netlify development server:
 
 ```bash
-netlify dev
+npx netlify dev
 ```
 
 3. When prompted, select:
@@ -128,7 +128,7 @@ Please follow the `INSTALL_BACKEND.md` for the full installation instruction.
 1. Open backend directory in the terminal:
 
     ```bash
-    cd speech-emotion-detection
+    cd Backend-CybellaAI
     ```
 
 2. Activate the virtual environment:
