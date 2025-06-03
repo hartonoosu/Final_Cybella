@@ -4,9 +4,9 @@
 
 ### On Windows:
 - Go to the official Python downloads page:
-https://www.python.org/downloads/windows/
+(https://www.python.org/downloads/release/python-3110/)
 
-- Click "Download Python 3.11.x" for Windows
+- Click "Windows installer (64-bit)" Under Files Table.
 
 - Run the installer, and make sure to check the box: “Add Python 3.11 to PATH”
 - Then click “Install Now”
@@ -112,8 +112,15 @@ python3.11 -m venv venv311 (MacOS)
     ```
 ## 8. Install FFmpeg 
 ### On Windows
-- Go to this link:  https://www.gyan.dev/ffmpegbuilds/ffmpeg-release-essentials.zip
-- Download the ZIP and extract it to: C:\ffmpeg
+- Download FFmpeg from: https://www.ffmpeg.org/download.html
+- Click on the Windows button.
+- After click on Windows builds from gyan.dev
+- Scroll down to ‘release builds’ and download ffmpeg-release-essentials.zip
+- After downloading, extract the files in your C Drive.
+- Navigate to the extracted folder:
+```bash
+cd C:\ffmpeg\bin 
+```
 - Inside that folder, go to: C:\ffmpeg\bin → You’ll see ffmpeg.exe
 - Add C:\ffmpeg\bin to your system PATH:
 - Open the Start menu → search “Environment Variables”
