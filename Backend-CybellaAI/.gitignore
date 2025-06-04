@@ -21,6 +21,7 @@ __pycache__/
 venv/
 venv311/
 env/
+.env
 
 # Model outputs
 fine-tuned-wav2vec2-ravdess/
